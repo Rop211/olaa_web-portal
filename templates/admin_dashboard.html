@@ -1,0 +1,300 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold"><i class="fas fa-chart-line text-primary me-2"></i>Dashboard</h2>
+            <p class="text-muted mb-0">Welcome back, {{ session.admin_username }}!</p>
+        </div>
+        <div>
+            <a href="{{ url_for('admin_logout') }}" class="btn btn-danger">
+                <i class="fas fa-sign-out-alt me-1"></i>Logout
+            </a>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3 col-6">
+            <div class="card admin-card bg-primary text-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-white-50">Applications</h6>
+                        <h2 class="fw-bold">{{ stats.total_applications }}</h2>
+                        <small>{{ stats.pending_applications }} pending</small>
+                    </div>
+                    <div class="stat-icon bg-white bg-opacity-25">
+                        <i class="fas fa-user-plus fa-2x text-white"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card admin-card bg-success text-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-white-50">Students</h6>
+                        <h2 class="fw-bold">{{ stats.students }}</h2>
+                        <small>Active</small>
+                    </div>
+                    <div class="stat-icon bg-white bg-opacity-25">
+                        <i class="fas fa-user-graduate fa-2x text-white"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card admin-card bg-warning text-dark">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-dark-50">Messages</h6>
+                        <h2 class="fw-bold">{{ stats.messages }}</h2>
+                        <small>Unread</small>
+                    </div>
+                    <div class="stat-icon bg-white bg-opacity-25">
+                        <i class="fas fa-envelope fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card admin-card bg-info text-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-white-50">Subscribers</h6>
+                        <h2 class="fw-bold">{{ stats.subscribers }}</h2>
+                        <small>Active</small>
+                    </div>
+                    <div class="stat-icon bg-white bg-opacity-25">
+                        <i class="fas fa-users fa-2x text-white"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Row 2 Stats -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-2 col-4">
+            <div class="card admin-card bg-secondary text-white">
+                <div class="text-center">
+                    <h6 class="text-white-50">Tours</h6>
+                    <h3 class="fw-bold">{{ stats.total_tours }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 col-4">
+            <div class="card admin-card bg-dark text-white">
+                <div class="text-center">
+                    <h6 class="text-white-50">Staff</h6>
+                    <h3 class="fw-bold">{{ stats.staff }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 col-4">
+            <div class="card admin-card bg-danger text-white">
+                <div class="text-center">
+                    <h6 class="text-white-50">Gallery</h6>
+                    <h3 class="fw-bold">{{ stats.gallery_count }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card admin-card" style="background: #6f42c1; color: white;">
+                <div class="text-center">
+                    <h6 class="text-white-50">Testimonials</h6>
+                    <h3 class="fw-bold">{{ stats.testimonials }}</h3>
+                    <small>{{ stats.pending_testimonials }} pending</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card admin-card" style="background: #fd7e14; color: white;">
+                <div class="text-center">
+                    <h6 class="text-white-50">Upcoming Events</h6>
+                    <h3 class="fw-bold">{{ stats.events }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions - ONLY WORKING LINKS -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <h6 class="fw-bold mb-3"><i class="fas fa-bolt text-warning me-2"></i>Quick Actions</h6>
+            <div class="d-flex flex-wrap gap-2">
+                <!-- Core Management -->
+                <a href="{{ url_for('admin_applications') }}" class="btn btn-outline-primary btn-sm">
+                    <i class="fas fa-list me-1"></i>Applications
+                </a>
+                <a href="{{ url_for('admin_tours') }}" class="btn btn-outline-success btn-sm">
+                    <i class="fas fa-calendar me-1"></i>Tours
+                </a>
+                <a href="{{ url_for('admin_testimonials') }}" class="btn btn-outline-warning btn-sm">
+                    <i class="fas fa-star me-1"></i>Testimonials
+                </a>
+                <a href="{{ url_for('admin_gallery') }}" class="btn btn-outline-info btn-sm">
+                    <i class="fas fa-images me-1"></i>Gallery
+                </a>
+                <a href="{{ url_for('admin_messages') }}" class="btn btn-outline-danger btn-sm">
+                    <i class="fas fa-envelope me-1"></i>Messages
+                </a>
+                <a href="{{ url_for('admin_subscribers') }}" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-users me-1"></i>Subscribers
+                </a>
+
+                <!-- People -->
+                <a href="{{ url_for('admin_students') }}" class="btn btn-outline-primary btn-sm">
+                    <i class="fas fa-user-graduate me-1"></i>Students
+                </a>
+                <a href="{{ url_for('admin_staff') }}" class="btn btn-outline-dark btn-sm">
+                    <i class="fas fa-user-tie me-1"></i>Staff
+                </a>
+                <a href="{{ url_for('admin_parents') }}" class="btn btn-outline-primary btn-sm">
+                    <i class="fas fa-users me-1"></i>Parents
+                </a>
+
+                <!-- Finance -->
+                <a href="{{ url_for('admin_fees') }}" class="btn btn-outline-success btn-sm">
+                    <i class="fas fa-money-bill me-1"></i>Fee Structures
+                </a>
+
+                <!-- Attendance -->
+                <a href="{{ url_for('admin_attendance') }}" class="btn btn-outline-info btn-sm">
+                    <i class="fas fa-clipboard-check me-1"></i>Attendance
+                </a>
+                <a href="{{ url_for('admin_attendance_report') }}" class="btn btn-outline-info btn-sm">
+                    <i class="fas fa-file-alt me-1"></i>Attendance Report
+                </a>
+                <a href="{{ url_for('admin_staff_attendance') }}" class="btn btn-outline-info btn-sm">
+                    <i class="fas fa-user-clock me-1"></i>Staff Attendance
+                </a>
+
+                <!-- Results -->
+                <a href="{{ url_for('admin_results_dashboard') }}" class="btn btn-outline-warning btn-sm">
+                    <i class="fas fa-graduation-cap me-1"></i>Results Dashboard
+                </a>
+                <a href="{{ url_for('admin_exams') }}" class="btn btn-outline-primary btn-sm">
+                    <i class="fas fa-plus me-1"></i>Exams
+                </a>
+                <a href="{{ url_for('admin_subjects') }}" class="btn btn-outline-primary btn-sm">
+                    <i class="fas fa-book me-1"></i>Subjects
+                </a>
+                <a href="{{ url_for('admin_terms') }}" class="btn btn-outline-info btn-sm">
+                    <i class="fas fa-calendar me-1"></i>Terms
+                </a>
+
+                <!-- System -->
+                <a href="{{ url_for('admin_events') }}" class="btn btn-outline-info btn-sm">
+                    <i class="fas fa-calendar-alt me-1"></i>Events
+                </a>
+                <a href="{{ url_for('admin_announcements') }}" class="btn btn-outline-warning btn-sm">
+                    <i class="fas fa-bullhorn me-1"></i>Announcements
+                </a>
+                <a href="{{ url_for('admin_settings') }}" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-cog me-1"></i>Settings
+                </a>
+                <a href="{{ url_for('admin_sms') }}" class="btn btn-outline-success btn-sm">
+                    <i class="fas fa-sms me-1"></i>SMS
+                </a>
+                <a href="{{ url_for('admin_backup') }}" class="btn btn-outline-primary btn-sm">
+                    <i class="fas fa-database me-1"></i>Backup
+                </a>
+                <a href="{{ url_for('admin_logs') }}" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-history me-1"></i>Logs
+                </a>
+
+                <!-- Exports -->
+                <a href="{{ url_for('admin_export_applications') }}" class="btn btn-outline-dark btn-sm">
+                    <i class="fas fa-file-export me-1"></i>Export Apps
+                </a>
+                <a href="{{ url_for('admin_export_students') }}" class="btn btn-outline-dark btn-sm">
+                    <i class="fas fa-file-export me-1"></i>Export Students
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white fw-bold">
+                    <i class="fas fa-file-alt me-2"></i>Recent Applications
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead><tr><th>Child</th><th>Grade</th><th>Status</th><th>Date</th></tr></thead>
+                            <tbody>
+                                {% for app in recent_applications %}
+                                <tr>
+                                    <td>{{ app.child_name }}</td>
+                                    <td>{{ app.grade }}</td>
+                                    <td>
+                                        <span class="badge bg-{{ 'warning' if app.status == 'Pending' else 'success' if app.status == 'Enrolled' else 'danger' if app.status == 'Rejected' else 'info' }}">
+                                            {{ app.status }}
+                                        </span>
+                                    </td>
+                                    <td>{{ app.created_at.strftime('%d/%m/%y') }}</td>
+                                </tr>
+                                {% else %}
+                                <tr><td colspan="4" class="text-center py-3 text-muted">No applications</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white fw-bold">
+                    <i class="fas fa-history me-2"></i>Recent Activity
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead><tr><th>Action</th><th>Entity</th><th>Time</th></tr></thead>
+                            <tbody>
+                                {% for log in recent_activities %}
+                                <tr>
+                                    <td><span class="badge bg-secondary">{{ log.action }}</span></td>
+                                    <td>{{ log.entity_type or '-' }}</td>
+                                    <td>{{ log.created_at.strftime('%d/%m/%y %H:%M') }}</td>
+                                </tr>
+                                {% else %}
+                                <tr><td colspan="3" class="text-center py-3 text-muted">No activity</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.admin-card {
+    border: none;
+    border-radius: 16px;
+    padding: 15px 20px;
+    transition: transform 0.3s;
+}
+.admin-card:hover { transform: translateY(-3px); }
+.admin-card .stat-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+</style>
+
+{% endblock %}

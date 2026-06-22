@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% block title %}Activity Logs{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold"><i class="fas fa-history text-secondary me-2"></i>Activity Logs</h2>
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Back
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <form method="GET" class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">Action Type</label>
+                    <select name="action" class="form-select">
+                        <option value="all">All Actions</option>
+                        <option value="login">Login</option>
+                        <option value="logout">Logout</option>
+                        <option value="create">Create</option>
+                        <option value="update">Update</option>
+                        <option value="delete">Delete</option>
+                        <option value="export">Export</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">Entity Type</label>
+                    <select name="entity" class="form-select">
+                        <option value="all">All Entities</option>
+                        <option value="Application">Application</option>
+                        <option value="Student">Student</option>
+                        <option value="Staff">Staff</option>
+                        <option value="TourBooking">Tour Booking</option>
+                        <option value="FeePayment">Fee Payment</option>
+                        <option value="Parent">Parent</option>
+                        <option value="Event">Event</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">Date From</label>
+                    <input type="date" name="from_date" class="form-control">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">Date To</label>
+                    <input type="date" name="to_date" class="form-control">
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search me-1"></i>Filter Logs
+                    </button>
+                    <a href="{{ url_for('admin_logs') }}" class="btn btn-secondary">
+                        <i class="fas fa-undo me-1"></i>Reset
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>User</th>
+                            <th>Action</th>
+                            <th>Entity</th>
+                            <th>Details</th>
+                            <th>IP Address</th>
+                            <th>Date/Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for log in logs %}
+                        <tr>
+                            <td>{{ loop.index + ((current_page - 1) * 20) }}</td>
+                            <td>
+                                <span class="badge bg-primary">{{ log.user.username if log.user else 'System' }}</span>
+                            </td>
+                            <td>
+                                <span class="badge bg-{{ 'success' if log.action == 'login' else 'danger' if log.action == 'logout' else 'warning' if log.action == 'create' else 'info' if log.action == 'update' else 'secondary' }}">
+                                    {{ log.action }}
+                                </span>
+                            </td>
+                            <td>{{ log.entity_type or '-' }}</td>
+                            <td><small>{{ log.details or '-' }}</small></td>
+                            <td><code>{{ log.ip_address or '-' }}</code></td>
+                            <td>{{ log.created_at.strftime('%d/%m/%y %H:%M:%S') if log.created_at else '-' }}</td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="7" class="text-center py-4 text-muted">No activity logs found</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    {% if total_pages > 1 %}
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item {% if current_page == 1 %}disabled{% endif %}">
+                <a class="page-link" href="?page={{ current_page - 1 }}&action={{ request.args.get('action', 'all') }}&entity={{ request.args.get('entity', 'all') }}">Previous</a>
+            </li>
+            {% for p in range(1, total_pages + 1) %}
+            <li class="page-item {% if p == current_page %}active{% endif %}">
+                <a class="page-link" href="?page={{ p }}&action={{ request.args.get('action', 'all') }}&entity={{ request.args.get('entity', 'all') }}">{{ p }}</a>
+            </li>
+            {% endfor %}
+            <li class="page-item {% if current_page == total_pages %}disabled{% endif %}">
+                <a class="page-link" href="?page={{ current_page + 1 }}&action={{ request.args.get('action', 'all') }}&entity={{ request.args.get('entity', 'all') }}">Next</a>
+            </li>
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+
+{% endblock %}

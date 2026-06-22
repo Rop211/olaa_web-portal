@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}Tour Booking #{{ tour.id }}{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold"><i class="fas fa-calendar text-success me-2"></i>Tour Booking #{{ tour.id }}</h2>
+        <div>
+            <a href="{{ url_for('admin_tours') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-1"></i>Back
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong><i class="fas fa-user-tie me-2"></i>Parent/Guardian:</strong><br>{{ tour.parent_name }}</p>
+                            <p><strong><i class="fas fa-envelope me-2"></i>Email:</strong><br>{{ tour.email }}</p>
+                            <p><strong><i class="fas fa-phone me-2"></i>Phone:</strong><br>{{ tour.phone }}</p>
+                            <p><strong><i class="fas fa-users me-2"></i>Number of People:</strong><br>{{ tour.number_of_people }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong><i class="fas fa-calendar-alt me-2"></i>Preferred Date:</strong><br>{{ tour.preferred_date.strftime('%d %B %Y') }}</p>
+                            <p><strong><i class="fas fa-clock me-2"></i>Preferred Time:</strong><br>{{ tour.preferred_time }}</p>
+                            {% if tour.child_age %}
+                            <p><strong><i class="fas fa-child me-2"></i>Child's Age:</strong><br>{{ tour.child_age }}</p>
+                            {% endif %}
+                            <p><strong><i class="fas fa-tag me-2"></i>Status:</strong><br>
+                                <span class="badge bg-{{ 'warning' if tour.status == 'Pending' else 'success' if tour.status == 'Confirmed' else 'danger' if tour.status == 'Cancelled' else 'info' }}" style="font-size: 1rem;">
+                                    {{ tour.status }}
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                    <hr>
+                    <p><strong><i class="fas fa-clock me-2"></i>Booked On:</strong> {{ tour.created_at.strftime('%d %B %Y, %H:%M') }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3"><i class="fas fa-edit me-2"></i>Update Status</h5>
+                    <form method="POST" action="{{ url_for('admin_update_tour_status', id=tour.id) }}">
+                        <select name="status" class="form-select mb-3">
+                            <option value="Pending" {% if tour.status == 'Pending' %}selected{% endif %}>Pending</option>
+                            <option value="Confirmed" {% if tour.status == 'Confirmed' %}selected{% endif %}>Confirmed</option>
+                            <option value="Completed" {% if tour.status == 'Completed' %}selected{% endif %}>Completed</option>
+                            <option value="Cancelled" {% if tour.status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                        </select>
+                        <button type="submit" class="btn btn-success w-100">
+                            <i class="fas fa-save me-1"></i>Update Status
+                        </button>
+                    </form>
+                    <hr>
+                    <form method="POST" action="{{ url_for('admin_delete_tour', id=tour.id) }}" onsubmit="return confirm('Delete this booking?')">
+                        <button type="submit" class="btn btn-danger w-100">
+                            <i class="fas fa-trash me-1"></i>Delete Booking
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

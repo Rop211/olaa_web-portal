@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Subscribers - Admin{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold"><i class="fas fa-users text-info me-2"></i>Newsletter Subscribers</h2>
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Back
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            <p>Total Subscribers: <strong>{{ subscribers|length }}</strong></p>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>Subscribed Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for subscriber in subscribers %}
+                        <tr>
+                            <td>{{ subscriber.email }}</td>
+                            <td>
+                                <span class="badge bg-{{ 'success' if subscriber.is_active else 'secondary' }}">
+                                    {{ 'Active' if subscriber.is_active else 'Inactive' }}
+                                </span>
+                            </td>
+                            <td>{{ subscriber.subscribed_at.strftime('%d %B %Y, %H:%M') }}</td>
+                            <td>
+                                <form method="POST" action="{{ url_for('admin_toggle_subscriber', id=subscriber.id) }}" style="display:inline;">
+                                    <button type="submit" class="btn btn-sm btn-{{ 'secondary' if subscriber.is_active else 'success' }}">
+                                        <i class="fas fa-{{ 'pause' if subscriber.is_active else 'play' }}"></i>
+                                    </button>
+                                </form>
+                                <form method="POST" action="{{ url_for('admin_delete_subscriber', id=subscriber.id) }}" style="display:inline;" onsubmit="return confirm('Remove this subscriber?')">
+                                    <button type="submit" class="btn btn-sm btn-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="4" class="text-center py-4 text-muted">No subscribers found</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

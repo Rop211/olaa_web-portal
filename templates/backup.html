@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}Backup - Admin{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold"><i class="fas fa-database text-primary me-2"></i>Backup Management</h2>
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Back
+        </a>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-primary text-white fw-bold">
+                    <i class="fas fa-plus me-2"></i>Create Backup
+                </div>
+                <div class="card-body text-center">
+                    <i class="fas fa-database fa-4x text-primary mb-3"></i>
+                    <p>Create a full backup of your database</p>
+                    <form method="POST" action="{{ url_for('admin_create_backup') }}">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-download me-2"></i>Create Backup Now
+                        </button>
+                    </form>
+                    <small class="text-muted d-block mt-2">Last backup: {{ last_backup or 'Never' }}</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-warning text-dark fw-bold">
+                    <i class="fas fa-upload me-2"></i>Restore Backup
+                </div>
+                <div class="card-body text-center">
+                    <i class="fas fa-upload fa-4x text-warning mb-3"></i>
+                    <p>Restore database from a backup file</p>
+                    <form method="POST" action="{{ url_for('admin_restore_backup') }}" enctype="multipart/form-data">
+                        <input type="file" name="backup_file" class="form-control mb-3" accept=".sql,.zip">
+                        <button type="submit" class="btn btn-warning btn-lg">
+                            <i class="fas fa-upload me-2"></i>Restore Backup
+                        </button>
+                    </form>
+                    <small class="text-muted d-block mt-2">⚠️ This will overwrite current data</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-success text-white fw-bold">
+                    <i class="fas fa-list me-2"></i>Backup History
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Filename</th>
+                                    <th>Size</th>
+                                    <th>Created</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for backup in backups %}
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td><code>{{ backup.filename }}</code></td>
+                                    <td>{{ backup.size }}</td>
+                                    <td>{{ backup.created_at.strftime('%d/%m/%y %H:%M') }}</td>
+                                    <td>
+                                        <a href="{{ url_for('admin_download_backup', filename=backup.filename) }}" class="btn btn-sm btn-primary">
+                                            <i class="fas fa-download"></i>
+                                        </a>
+                                        <form method="POST" action="{{ url_for('admin_delete_backup', id=backup.id) }}" style="display:inline;" onsubmit="return confirm('Delete this backup?')">
+                                            <button type="submit" class="btn btn-sm btn-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr><td colspan="5" class="text-center py-4 text-muted">No backups available</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Applications - Admin{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold"><i class="fas fa-list text-primary me-2"></i>Applications</h2>
+        <div>
+            <a href="{{ url_for('admin_export_applications') }}" class="btn btn-success me-2">
+                <i class="fas fa-file-export me-1"></i>Export
+            </a>
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-1"></i>Back
+            </a>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Child</th>
+                            <th>Grade</th>
+                            <th>Parent</th>
+                            <th>Phone</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for app in applications %}
+                        <tr>
+                            <td>#{{ app.id }}</td>
+                            <td><strong>{{ app.child_name }}</strong></td>
+                            <td>{{ app.grade }}</td>
+                            <td>{{ app.parent_name }}</td>
+                            <td>{{ app.phone }}</td>
+                            <td>
+                                <span class="badge bg-{{ 'warning' if app.status == 'Pending' else 'success' if app.status == 'Enrolled' else 'danger' if app.status == 'Rejected' else 'info' }}">
+                                    {{ app.status }}
+                                </span>
+                            </td>
+                            <td>{{ app.created_at.strftime('%d/%m/%y') }}</td>
+                            <td>
+                                <a href="{{ url_for('admin_application_detail', id=app.id) }}" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="8" class="text-center py-4 text-muted">No applications found</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

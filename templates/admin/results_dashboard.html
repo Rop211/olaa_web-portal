@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block title %}Results Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold"><i class="fas fa-graduation-cap text-primary me-2"></i>Results & Marks Dashboard</h2>
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Back
+        </a>
+    </div>
+
+    <!-- Stats -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3 col-6">
+            <div class="card border-0 shadow-sm p-3 text-center bg-primary text-white">
+                <h3>{{ stats.total_exams }}</h3>
+                <small>Total Exams</small>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card border-0 shadow-sm p-3 text-center bg-success text-white">
+                <h3>{{ stats.total_subjects }}</h3>
+                <small>Subjects</small>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card border-0 shadow-sm p-3 text-center bg-warning text-dark">
+                <h3>{{ stats.total_results }}</h3>
+                <small>Results Entered</small>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card border-0 shadow-sm p-3 text-center bg-info text-white">
+                <h3>{{ stats.published_results }}</h3>
+                <small>Published</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <h6 class="fw-bold mb-3"><i class="fas fa-bolt text-warning me-2"></i>Quick Actions</h6>
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{{ url_for('admin_exams') }}" class="btn btn-outline-primary btn-sm">
+                    <i class="fas fa-plus me-1"></i>Create Exam
+                </a>
+                <a href="{{ url_for('admin_subjects') }}" class="btn btn-outline-success btn-sm">
+                    <i class="fas fa-book me-1"></i>Manage Subjects
+                </a>
+                <a href="{{ url_for('admin_terms') }}" class="btn btn-outline-info btn-sm">
+                    <i class="fas fa-calendar me-1"></i>Manage Terms
+                </a>
+                <a href="{{ url_for('admin_students') }}" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-user-graduate me-1"></i>View Students
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Exams List -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white fw-bold">
+            <i class="fas fa-list me-2"></i>Recent Exams
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Exam Name</th>
+                            <th>Grade</th>
+                            <th>Subject</th>
+                            <th>Term</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for exam in exams[:10] %}
+                        <tr>
+                            <td><strong>{{ exam.name }}</strong></td>
+                            <td>{{ exam.grade }}</td>
+                            <td>{{ exam.subject }}</td>
+                            <td>{{ exam.term }}</td>
+                            <td>{{ exam.exam_date.strftime('%d/%m/%y') }}</td>
+                            <td>
+                                <a href="{{ url_for('admin_enter_marks', exam_id=exam.id) }}" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-edit"></i> Marks
+                                </a>
+                                <a href="{{ url_for('admin_export_results', exam_id=exam.id) }}" class="btn btn-sm btn-success">
+                                    <i class="fas fa-file-export"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="6" class="text-center py-4 text-muted">No exams created yet</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

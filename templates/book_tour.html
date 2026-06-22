@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}Book a School Tour{% endblock %}
+
+{% block content %}
+
+<section class="py-5" style="background: #f5f7fa; min-height: 80vh;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                    <div class="card-header bg-success text-white p-4">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-calendar-check fa-3x me-3"></i>
+                            <div>
+                                <h2 class="fw-bold mb-0">Book a School Tour</h2>
+                                <p class="mb-0 text-white-50">Visit our campus and see what makes Bright Minds Academy special.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-5">
+                        <form method="POST" action="{{ url_for('book_tour') }}">
+                            <div class="row g-4">
+                                <div class="col-12">
+                                    <label class="form-label fw-bold">Parent/Guardian name <span class="text-danger">*</span></label>
+                                    <input type="text" name="parent_name" class="form-control" placeholder="Full name" required>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Email address <span class="text-danger">*</span></label>
+                                    <input type="email" name="email" class="form-control" placeholder="your@email.com" required>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Phone number <span class="text-danger">*</span></label>
+                                    <input type="tel" name="phone" class="form-control" placeholder="+254 7XX XXX XXX" required>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Preferred date <span class="text-danger">*</span></label>
+                                    <input type="date" name="preferred_date" class="form-control" required>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Preferred time <span class="text-danger">*</span></label>
+                                    <select name="preferred_time" class="form-select" required>
+                                        <option value="">-- Select time --</option>
+                                        <option value="08:30 AM">8:30 AM</option>
+                                        <option value="09:30 AM">9:30 AM</option>
+                                        <option value="10:30 AM">10:30 AM</option>
+                                        <option value="11:30 AM">11:30 AM</option>
+                                        <option value="02:00 PM">2:00 PM</option>
+                                        <option value="03:00 PM">3:00 PM</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Number of people attending</label>
+                                    <input type="number" name="number_of_people" class="form-control" value="2" min="1" max="6" required>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Child's age (optional)</label>
+                                    <input type="text" name="child_age" class="form-control" placeholder="e.g. 5 years">
+                                </div>
+                                
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-success btn-lg w-100 py-3">
+                                        <i class="fas fa-calendar-plus me-2"></i>Book Tour
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+
+{% block title %}Parent Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+    <!-- Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold"><i class="fas fa-home text-primary me-2"></i>Parent Dashboard</h2>
+            <p class="text-muted">Welcome back, {{ session.parent_name or 'Parent' }}!</p>
+        </div>
+        <div>
+            <a href="{{ url_for('parent_profile') }}" class="btn btn-outline-primary me-2">
+                <i class="fas fa-user me-1"></i>Profile
+            </a>
+            <a href="{{ url_for('parent_logout') }}" class="btn btn-danger">
+                <i class="fas fa-sign-out-alt me-1"></i>Logout
+            </a>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3 col-6">
+            <div class="card border-0 shadow-sm p-3 text-center bg-primary text-white">
+                <h3 class="fw-bold">{{ children|length }}</h3>
+                <small>Children Enrolled</small>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card border-0 shadow-sm p-3 text-center bg-success text-white">
+                <h3 class="fw-bold">{{ attendance_rate or '98%' }}</h3>
+                <small>Attendance Rate</small>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card border-0 shadow-sm p-3 text-center bg-warning text-dark">
+                <h3 class="fw-bold">KSh {{ total_fees|round(2) if total_fees else '0' }}</h3>
+                <small>Total Fees</small>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card border-0 shadow-sm p-3 text-center bg-info text-white">
+                <h3 class="fw-bold">{{ upcoming_events|length or '0' }}</h3>
+                <small>Upcoming Events</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Children Overview -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white fw-bold">
+            <i class="fas fa-child me-2"></i>My Children
+            <span class="badge bg-primary ms-2">{{ children|length }}</span>
+        </div>
+        <div class="card-body">
+            {% if children %}
+            <div class="row g-3">
+                {% for child in children %}
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px; flex-shrink: 0;">
+                                    <span class="fw-bold">{{ child.first_name[0] }}{{ child.last_name[0] }}</span>
+                                </div>
+                                <div>
+                                    <h6 class="fw-bold mb-0">{{ child.full_name }}</h6>
+                                    <small class="text-muted">{{ child.grade }}</small>
+                                    <br>
+                                    <small class="text-muted">Admission: {{ child.admission_number }}</small>
+                                </div>
+                                <div class="ms-auto">
+                                    <a href="{{ url_for('parent_child_progress', child_id=child.id) }}" class="btn btn-sm btn-primary">
+                                        <i class="fas fa-eye"></i> View
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mt-2">
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-muted small">Attendance</span>
+                                    <span class="text-muted small">{{ child.attendance_rate or 0 }}%</span>
+                                </div>
+                                <div class="progress" style="height: 6px;">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: {{ child.attendance_rate or 0 }}%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-4">
+                <i class="fas fa-child fa-4x text-muted mb-3"></i>
+                <p class="text-muted">No children enrolled yet.</p>
+                <a href="{{ url_for('apply') }}" class="btn btn-primary">Apply Now</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white fw-bold">
+                    <i class="fas fa-calendar-alt me-2"></i>Upcoming Events
+                    <span class="badge bg-info ms-2">{{ upcoming_events|length }}</span>
+                </div>
+                <div class="card-body">
+                    {% if upcoming_events %}
+                        {% for event in upcoming_events %}
+                        <div class="d-flex align-items-center mb-2 pb-2 border-bottom">
+                            <div class="bg-primary text-white rounded text-center p-2 me-3" style="min-width: 50px;">
+                                <div class="fw-bold small">{{ event.event_date.strftime('%d') }}</div>
+                                <div class="small">{{ event.event_date.strftime('%b') }}</div>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">{{ event.title }}</h6>
+                                <small class="text-muted">{{ event.event_time or 'All day' }}</small>
+                                <br>
+                                <small class="text-muted"><i class="fas fa-map-marker-alt me-1"></i>{{ event.location or 'School' }}</small>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-center text-muted py-3">No upcoming events</p>
+                    {% endif %}
+                    <a href="{{ url_for('events') }}" class="btn btn-sm btn-outline-primary w-100">View All Events</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white fw-bold">
+                    <i class="fas fa-bullhorn me-2"></i>Announcements
+                    <span class="badge bg-warning ms-2">New</span>
+                </div>
+                <div class="card-body">
+                    {% if announcements %}
+                        {% for announcement in announcements[:3] %}
+                        <div class="mb-2 pb-2 border-bottom">
+                            <div class="d-flex justify-content-between">
+                                <h6 class="mb-0">{{ announcement.title }}</h6>
+                                <small class="text-muted">{{ announcement.publish_date.strftime('%d/%m/%y') }}</small>
+                            </div>
+                            <p class="text-muted small mb-0">{{ announcement.content[:100] }}{% if announcement.content|length > 100 %}...{% endif %}</p>
+                            {% if announcement.priority == 'Urgent' %}
+                            <span class="badge bg-danger">Urgent</span>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-center text-muted py-3">No announcements</p>
+                    {% endif %}
+                    <a href="{{ url_for('news') }}" class="btn btn-sm btn-outline-primary w-100">View All News</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="card border-0 shadow-sm mt-4">
+        <div class="card-body">
+            <h6 class="fw-bold mb-3"><i class="fas fa-bolt text-warning me-2"></i>Quick Actions</h6>
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{{ url_for('parent_fees') }}" class="btn btn-outline-success btn-sm">
+                    <i class="fas fa-money-bill me-1"></i>View Fees
+                </a>
+                <a href="{{ url_for('parent_profile') }}" class="btn btn-outline-primary btn-sm">
+                    <i class="fas fa-user me-1"></i>My Profile
+                </a>
+                <a href="{{ url_for('apply') }}" class="btn btn-outline-info btn-sm">
+                    <i class="fas fa-user-plus me-1"></i>Apply for Another Child
+                </a>
+                <a href="{{ url_for('contact') }}" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-envelope me-1"></i>Contact School
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

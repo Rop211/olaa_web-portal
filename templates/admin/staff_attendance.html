@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}Staff Attendance{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold"><i class="fas fa-user-clock text-info me-2"></i>Staff Attendance</h2>
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Back
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <form method="GET" class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">Date</label>
+                    <input type="date" name="date" class="form-control" value="{{ selected_date }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">Department</label>
+                    <select name="department" class="form-select">
+                        <option value="all">All Departments</option>
+                        <option value="Teaching">Teaching</option>
+                        <option value="Administration">Administration</option>
+                        <option value="Support">Support</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-search me-1"></i>Load
+                    </button>
+                </div>
+                <div class="col-md-4 text-end">
+                    <span class="badge bg-success">Present: {{ present_count or 0 }}</span>
+                    <span class="badge bg-danger">Absent: {{ absent_count or 0 }}</span>
+                    <span class="badge bg-warning text-dark">Leave: {{ leave_count or 0 }}</span>
+                    <span class="badge bg-info">Total: {{ total_staff or 0 }}</span>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+            <form method="POST" action="{{ url_for('admin_mark_staff_attendance') }}">
+                <input type="hidden" name="date" value="{{ selected_date }}">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Staff ID</th>
+                                <th>Name</th>
+                                <th>Position</th>
+                                <th>Department</th>
+                                <th>Status</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for member in staff %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td><code>{{ member.staff_id }}</code></td>
+                                <td><strong>{{ member.full_name }}</strong></td>
+                                <td>{{ member.position }}</td>
+                                <td>{{ member.department or '-' }}</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <input type="radio" class="btn-check" name="attendance_{{ member.id }}" id="present_{{ member.id }}" value="present" autocomplete="off" checked>
+                                        <label class="btn btn-outline-success btn-sm" for="present_{{ member.id }}">Present</label>
+                                        
+                                        <input type="radio" class="btn-check" name="attendance_{{ member.id }}" id="absent_{{ member.id }}" value="absent" autocomplete="off">
+                                        <label class="btn btn-outline-danger btn-sm" for="absent_{{ member.id }}">Absent</label>
+                                        
+                                        <input type="radio" class="btn-check" name="attendance_{{ member.id }}" id="leave_{{ member.id }}" value="leave" autocomplete="off">
+                                        <label class="btn btn-outline-warning btn-sm" for="leave_{{ member.id }}">Leave</label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <input type="text" name="notes_{{ member.id }}" class="form-control form-control-sm" placeholder="Notes">
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="7" class="text-center py-4 text-muted">No staff members found</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% if staff %}
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save me-1"></i>Save Attendance
+                    </button>
+                </div>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

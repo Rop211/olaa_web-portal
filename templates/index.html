@@ -1,0 +1,769 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Our Lady of Assumption Academy{% endblock %}
+
+{% block content %}
+
+<style>
+    /* ===== GLOBAL ===== */
+    body {
+        font-family: 'Inter', sans-serif;
+    }
+    .text-gold {
+        color: #f9a825;
+    }
+    .bg-gold {
+        background: #f9a825;
+    }
+    .border-gold {
+        border-color: #f9a825;
+    }
+    .section-title {
+        font-size: 2.75rem;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+    }
+    .section-sub {
+        font-size: 1.1rem;
+        color: #6c757d;
+        max-width: 600px;
+        margin: 0 auto 30px;
+    }
+
+    /* ===== HERO ===== */
+    .hero-section {
+        min-height: 100vh;
+        padding-top: 80px;
+        display: flex;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(135deg, rgba(10, 22, 40, 0.4), rgba(13, 71, 161, 0.3)), 
+                    url('{{ url_for('static', filename='images/IMG_20260618_113822.jpg') }}');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+    }
+    .hero-title {
+        font-size: 4.5rem;
+        font-weight: 800;
+        line-height: 1.1;
+        color: white;
+        text-shadow: 0 4px 30px rgba(0,0,0,0.4);
+    }
+    .hero-title .highlight {
+        color: #f9a825;
+    }
+    .hero-subtitle {
+        font-size: 1.4rem;
+        font-weight: 300;
+        color: rgba(255,255,255,0.95);
+        text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+        margin: 20px 0;
+    }
+    .hero-text {
+        font-size: 1.1rem;
+        color: rgba(255,255,255,0.9);
+        max-width: 540px;
+        line-height: 1.8;
+        text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+        margin-bottom: 30px;
+    }
+    .hero-badge {
+        display: inline-block;
+        background: rgba(249, 168, 37, 0.25);
+        padding: 8px 24px;
+        border-radius: 50px;
+        color: #f9a825;
+        font-weight: 600;
+        font-size: 0.85rem;
+        letter-spacing: 1px;
+        border: 1px solid rgba(249, 168, 37, 0.2);
+        margin-bottom: 20px;
+    }
+    .right-panel {
+        background: rgba(255,255,255,0.10);
+        backdrop-filter: blur(16px);
+        border-radius: 24px;
+        padding: 35px;
+        border: 1px solid rgba(255,255,255,0.12);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+    .right-panel .stat-box {
+        background: rgba(255,255,255,0.06);
+        border-radius: 12px;
+        padding: 18px 10px;
+        text-align: center;
+        border: 1px solid rgba(255,255,255,0.06);
+        transition: 0.3s;
+    }
+    .right-panel .stat-box:hover {
+        background: rgba(255,255,255,0.15);
+        transform: translateY(-3px);
+    }
+    .right-panel .stat-number {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: #f9a825;
+    }
+    .right-panel .stat-label {
+        font-size: 0.85rem;
+        color: rgba(255,255,255,0.7);
+    }
+    .bottom-stat {
+        background: rgba(0,0,0,0.20);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 16px;
+        padding: 18px 24px;
+        color: white;
+        transition: 0.3s;
+    }
+    .bottom-stat:hover {
+        background: rgba(0,0,0,0.35);
+        transform: translateY(-3px);
+    }
+    .bottom-stat .number {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #f9a825;
+    }
+    .bottom-stat .label {
+        font-size: 0.8rem;
+        color: rgba(255,255,255,0.75);
+    }
+
+    /* ===== BUTTONS ===== */
+    .btn-gold {
+        background: #f9a825;
+        color: #1a237e;
+        padding: 14px 42px;
+        border: none;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 30px rgba(249, 168, 37, 0.3);
+        display: inline-block;
+        text-decoration: none;
+    }
+    .btn-gold:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 40px rgba(249, 168, 37, 0.4);
+        background: #f57f17;
+        color: white;
+    }
+    .btn-outline-gold {
+        color: #f9a825;
+        border: 2px solid #f9a825;
+        background: transparent;
+        padding: 12px 36px;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        display: inline-block;
+        text-decoration: none;
+    }
+    .btn-outline-gold:hover {
+        background: #f9a825;
+        color: #1a237e;
+        transform: translateY(-3px);
+    }
+
+    /* ===== FEATURE CARDS ===== */
+    .feature-card {
+        border-radius: 20px;
+        padding: 35px 25px;
+        text-align: center;
+        background: white;
+        border: 1px solid #f0f0f0;
+        transition: all 0.4s ease;
+        height: 100%;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+    }
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 50px rgba(13, 71, 161, 0.08);
+        border-color: #f9a825;
+    }
+    .feature-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        font-size: 2rem;
+        transition: 0.4s;
+    }
+    .feature-card:hover .feature-icon {
+        transform: scale(1.1) rotate(-5deg);
+    }
+
+    /* ===== GALLERY ===== */
+    .gallery-item {
+        border-radius: 16px;
+        overflow: hidden;
+        background: white;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+        transition: all 0.4s ease;
+    }
+    .gallery-item:hover {
+        transform: scale(1.02);
+        box-shadow: 0 16px 50px rgba(0,0,0,0.12);
+    }
+    .gallery-item img {
+        width: 100%;
+        height: 360px;
+        object-fit: cover;
+        display: block;
+    }
+    .gallery-caption {
+        padding: 20px 22px;
+        text-align: center;
+        background: white;
+        border-top: 1px solid #f0f0f0;
+    }
+    .gallery-caption h6 {
+        font-weight: 700;
+        color: #1a237e;
+        font-size: 1.1rem;
+        margin: 0 0 4px;
+    }
+    .gallery-caption p {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin: 0;
+        font-style: italic;
+    }
+
+    /* ===== TESTIMONIALS ===== */
+    .testimonial-card {
+        background: white;
+        border-radius: 16px;
+        padding: 30px;
+        border: 1px solid #eee;
+        transition: 0.3s;
+        height: 100%;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+    }
+    .testimonial-card:hover {
+        border-color: #f9a825;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+    }
+
+    /* ===== CTA ===== */
+    .cta-section {
+        background: linear-gradient(135deg, #1a237e, #0d47a1);
+        padding: 80px 0;
+        text-align: center;
+        color: white;
+    }
+
+    /* ===== FADE IN ===== */
+    .fade-in {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.9s ease;
+    }
+    .fade-in.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 2.8rem;
+        }
+        .hero-subtitle {
+            font-size: 1.1rem;
+        }
+        .right-panel {
+            margin-top: 30px;
+        }
+        .cta-section h2 {
+            font-size: 2rem;
+        }
+        .gallery-item img {
+            height: 220px;
+        }
+        .section-title {
+            font-size: 2rem;
+        }
+        .gallery-caption h6 {
+            font-size: 0.95rem;
+        }
+        .gallery-caption p {
+            font-size: 0.8rem;
+        }
+    }
+</style>
+
+<!-- ============================================================ -->
+<!-- ===== HERO ===== -->
+<!-- ============================================================ -->
+<section class="hero-section">
+    <div class="container" style="position: relative; z-index: 2;">
+        <div class="row align-items-center min-vh-100">
+            <!-- LEFT -->
+            <div class="col-lg-7 text-white fade-in">
+                <div class="hero-badge">
+                    <i class="fas fa-cross me-2"></i> CATHOLIC SCHOOL · SINCE 2001
+                </div>
+                <h1 class="hero-title">
+                    Our Lady of <br><span class="highlight">Assumption</span> Academy
+                </h1>
+                <p class="hero-subtitle">
+                    <i class="fas fa-quote-left me-2 text-gold"></i> 
+                    Where faith meets excellence, and every child is known by name.
+                </p>
+                <p class="hero-text">
+                    We nurture not just minds, but hearts and souls. A Catholic school committed to academic rigour, 
+                    character formation, and a safe, loving environment where your child will flourish.
+                </p>
+                <div class="d-flex flex-wrap gap-2 mb-3">
+                    <span class="grade-tag" style="background:rgba(249,168,37,0.2);color:#f9a825;border:1px solid rgba(249,168,37,0.15);padding:4px 14px;border-radius:20px;font-size:0.75rem;font-weight:600;"><i class="fas fa-star me-1"></i>PPI – PP2</span>
+                    <span class="grade-tag" style="background:rgba(249,168,37,0.2);color:#f9a825;border:1px solid rgba(249,168,37,0.15);padding:4px 14px;border-radius:20px;font-size:0.75rem;font-weight:600;"><i class="fas fa-user-graduate me-1"></i>Grade 1 – 9</span>
+                    <span class="grade-tag" style="background:rgba(249,168,37,0.2);color:#f9a825;border:1px solid rgba(249,168,37,0.15);padding:4px 14px;border-radius:20px;font-size:0.75rem;font-weight:600;"><i class="fas fa-school me-1"></i>CBC Curriculum</span>
+                    <span class="grade-tag" style="background:rgba(249,168,37,0.2);color:#f9a825;border:1px solid rgba(249,168,37,0.15);padding:4px 14px;border-radius:20px;font-size:0.75rem;font-weight:600;"><i class="fas fa-church me-1"></i>Church School</span>
+                </div>
+                <div class="d-flex flex-wrap gap-2 mb-4">
+                    <span class="subject-tag" style="background:rgba(255,255,255,0.12);padding:4px 14px;border-radius:20px;font-size:0.75rem;border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.85);">📚 English</span>
+                    <span class="subject-tag">📖 Kiswahili</span>
+                    <span class="subject-tag">🧮 Mathematics</span>
+                    <span class="subject-tag">🔬 Science</span>
+                    <span class="subject-tag">💻 Computer Studies</span>
+                    <span class="subject-tag">🎨 Creative Arts</span>
+                    <span class="subject-tag">⛪ CRE</span>
+                    <span class="subject-tag">🌿 Agriculture</span>
+                    <span class="subject-tag">🏠 Home Science</span>
+                    <span class="subject-tag">🌍 Social Studies</span>
+                    <span class="subject-tag">🔧 Pre-Technical</span>
+                    <span class="subject-tag">🇫🇷 French</span>
+                </div>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="{{ url_for('apply') }}" class="btn-gold">
+                        <i class="fas fa-user-plus me-2"></i>Enroll Your Child Today
+                    </a>
+                    <a href="{{ url_for('book_tour') }}" class="btn-outline-gold">
+                        <i class="fas fa-calendar-check me-2"></i>Visit Our School
+                    </a>
+                </div>
+            </div>
+
+            <!-- RIGHT PANEL -->
+            <div class="col-lg-5 d-none d-lg-block fade-in">
+                <div class="right-panel">
+                    <div class="text-center mb-4">
+                        <div class="bg-warning bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mx-auto" style="width: 80px; height: 80px;">
+                            <i class="fas fa-school fa-3x text-gold"></i>
+                        </div>
+                        <h3 class="text-white fw-bold mt-3">Our School at a OLAA</h3>
+                        <p class="text-white-50">PPI – Grade 9 · CBC · Catholic</p>
+                    </div>
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <div class="stat-box">
+                                <div class="stat-number">950+</div>
+                                <div class="stat-label">Students</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stat-box">
+                                <div class="stat-number">98%</div>
+                                <div class="stat-label">Parent Satisfaction</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stat-box">
+                                <div class="stat-number">45+</div>
+                                <div class="stat-label">Years of Service</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stat-box">
+                                <div class="stat-number">70+</div>
+                                <div class="stat-label">Dedicated Staff</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOTTOM STATS -->
+        <div class="row g-3 mt-5 pt-3">
+            <div class="col-md-4">
+                <div class="bottom-stat">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="bg-warning bg-opacity-10 rounded-3 p-2">
+                            <i class="fas fa-users text-gold fs-3"></i>
+                        </div>
+                        <div>
+                            <div class="number">950+</div>
+                            <div class="label">Happy Students</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="bottom-stat">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="bg-warning bg-opacity-10 rounded-3 p-2">
+                            <i class="fas fa-star text-gold fs-3"></i>
+                        </div>
+                        <div>
+                            <div class="number">98%</div>
+                            <div class="label">Parents Recommend Us</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="bottom-stat">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="bg-warning bg-opacity-10 rounded-3 p-2">
+                            <i class="fas fa-trophy text-gold fs-3"></i>
+                        </div>
+                        <div>
+                            <div class="number">45+</div>
+                            <div class="label">Years of Excellence</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- ===== WHY PARENTS CHOOSE US ===== -->
+<!-- ============================================================ -->
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="text-uppercase text-gold fw-bold small tracking-wide">Why OLAA</span>
+            <h2 class="section-title">A School That <span class="text-gold">Feels Like Family</span></h2>
+            <p class="section-sub">We go beyond academics – we build character, faith, and lifelong friendships.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card fade-in">
+                    <div class="feature-icon bg-primary bg-opacity-10 text-primary">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h5 class="fw-bold">Known by Name</h5>
+                    <p class="text-muted small">Every child is more than a number. Our small class sizes ensure personalised attention and care.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card fade-in">
+                    <div class="feature-icon bg-success bg-opacity-10 text-success">
+                        <i class="fas fa-bible"></i>
+                    </div>
+                    <h5 class="fw-bold">Faith & Character</h5>
+                    <p class="text-muted small">Daily prayers, weekly Mass, and values-based education that shape children into responsible, kind citizens.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card fade-in">
+                    <div class="feature-icon bg-warning bg-opacity-10 text-warning">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h5 class="fw-bold">Safe & Nurturing</h5>
+                    <p class="text-muted small">A secure campus, child protection policies, and a warm, welcoming environment that puts parents at ease.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card fade-in">
+                    <div class="feature-icon bg-info bg-opacity-10 text-info">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <h5 class="fw-bold">CBC Excellence</h5>
+                    <p class="text-muted small">Fully aligned with the Competency‑Based Curriculum, preparing learners for life, not just exams.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card fade-in">
+                    <div class="feature-icon bg-danger bg-opacity-10 text-danger">
+                        <i class="fas fa-paint-brush"></i>
+                    </div>
+                    <h5 class="fw-bold">Holistic Development</h5>
+                    <p class="text-muted small">Music, art, sports, and co‑curricular activities that discover and nurture every child’s unique talent.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card fade-in">
+                    <div class="feature-icon bg-purple bg-opacity-10 text-purple">
+                        <i class="fas fa-hands-helping"></i>
+                    </div>
+                    <h5 class="fw-bold">Service to Community</h5>
+                    <p class="text-muted small">Living out our motto "Education for Service" through outreach and community involvement.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- ===== SUBJECT AREAS ===== -->
+<!-- ============================================================ -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="text-uppercase text-gold fw-bold small tracking-wide">CBC Learning Areas</span>
+            <h2 class="section-title">A Rich & <span class="text-gold">Balanced</span> Curriculum</h2>
+            <p class="section-sub">We cover every learning area to ensure your child receives a well‑rounded, future‑ready education.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-3 col-6">
+                <div class="feature-card shadow-sm fade-in" style="border-top: 4px solid #2e7d32;">
+                    <div class="feature-icon bg-success bg-opacity-10 text-success">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <h5 class="fw-bold">Languages</h5>
+                    <ul class="list-unstyled text-muted small">
+                        <li>✓ English</li>
+                        <li>✓ Kiswahili</li>
+                        <li>✓ French</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="feature-card shadow-sm fade-in" style="border-top: 4px solid #0d47a1;">
+                    <div class="feature-icon bg-primary bg-opacity-10 text-primary">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <h5 class="fw-bold">Mathematics & STEM</h5>
+                    <ul class="list-unstyled text-muted small">
+                        <li>✓ Mathematics</li>
+                        <li>✓ Science</li>
+                        <li><strong>✓ Computer Studies</strong></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="feature-card shadow-sm fade-in" style="border-top: 4px solid #e67e22;">
+                    <div class="feature-icon bg-warning bg-opacity-10 text-warning">
+                        <i class="fas fa-paint-brush"></i>
+                    </div>
+                    <h5 class="fw-bold">Creative Arts</h5>
+                    <ul class="list-unstyled text-muted small">
+                        <li>✓ Music & Drama</li>
+                        <li>✓ Art & Craft</li>
+                        <li>✓ Physical Education</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="feature-card shadow-sm fade-in" style="border-top: 4px solid #9b59b6;">
+                    <div class="feature-icon bg-purple bg-opacity-10 text-purple">
+                        <i class="fas fa-globe-africa"></i>
+                    </div>
+                    <h5 class="fw-bold">Humanities & Technical</h5>
+                    <ul class="list-unstyled text-muted small">
+                        <li>✓ Social Studies</li>
+                        <li>✓ CRE</li>
+                        <li>✓ Agriculture</li>
+                        <li>✓ Home Science</li>
+                        <li>✓ Pre-Technical</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- ===== GALLERY – CORRECT CAPTIONS FOR EACH IMAGE ===== -->
+<!-- ============================================================ -->
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="text-uppercase text-gold fw-bold small tracking-wide">Our School Life</span>
+            <h2 class="section-title">See <span class="text-gold">The Difference</span></h2>
+            <p class="section-sub">A warm, vibrant, and faith‑filled community where every child thrives.</p>
+        </div>
+        <div class="row g-4">
+            <!-- IMAGE 1 – GATE -->
+            <div class="col-md-4">
+                <div class="gallery-item shadow fade-in">
+                    <img src="{{ url_for('static', filename='images/IMG_20260618_113822.jpg') }}" 
+                         alt="School gate at Our Lady of Assumption Academy" 
+                         loading="lazy"
+                         onerror="this.style.display='none'">
+                    <div class="gallery-caption">
+                        <h6>A Warm Welcome</h6>
+                        <p>Our beautiful entrance invites you to a world of learning, faith, and love.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- IMAGE 2 – CAR PARKING -->
+            <div class="col-md-4">
+                <div class="gallery-item shadow fade-in">
+                    <img src="{{ url_for('static', filename='images/IMG_20260618_172516.jpg') }}" 
+                         alt="Safe car parking at Our Lady of Assumption Academy" 
+                         loading="lazy"
+                         onerror="this.style.display='none'">
+                    <div class="gallery-caption">
+                        <h6>Safe & Secure Parking</h6>
+                        <p>Ample, secure parking for parents – because your child’s safety starts the moment you arrive.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- IMAGE 3 – DORMITORY -->
+            <div class="col-md-4">
+                <div class="gallery-item shadow fade-in">
+                    <img src="{{ url_for('static', filename='images/IMG_20260618_170051.jpg') }}" 
+                         alt="Comfortable dormitory at Our Lady of Assumption Academy" 
+                         loading="lazy"
+                         onerror="this.style.display='none'">
+                    <div class="gallery-caption">
+                        <h6>Comfortable Dormitory</h6>
+                        <p>Peaceful, secure sleeping areas – a true home away from home for our boarders.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- ===== TESTIMONIALS ===== -->
+<!-- ============================================================ -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="text-uppercase text-gold fw-bold small tracking-wide">What Parents Say</span>
+            <h2 class="section-title">Real Stories from <span class="text-gold">Happy Families</span></h2>
+            <p class="section-sub">Hear why mothers and fathers trust us with their most precious gift – their child.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="testimonial-card fade-in">
+                    <div class="text-gold mb-2">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p class="fst-italic">“Our son has blossomed both academically and spiritually. The teachers truly care about every child’s wellbeing. We feel so blessed to be part of the OLAA family.”</p>
+                    <div class="d-flex align-items-center gap-3 mt-3 pt-2 border-top">
+                        <div class="bg-gold text-dark rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                            <span class="fw-bold">JM</span>
+                        </div>
+                        <div>
+                            <div class="fw-bold">Jane Mwangi</div>
+                            <div class="text-muted small">Parent, Grade 5</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="testimonial-card fade-in">
+                    <div class="text-gold mb-2">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p class="fst-italic">“The CBC curriculum is delivered with so much care. My daughter loves school, she’s confident, and her grades have improved tremendously. Thank you, OLAA!”</p>
+                    <div class="d-flex align-items-center gap-3 mt-3 pt-2 border-top">
+                        <div class="bg-gold text-dark rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                            <span class="fw-bold">PO</span>
+                        </div>
+                        <div>
+                            <div class="fw-bold">Peter Otieno</div>
+                            <div class="text-muted small">Parent, Grade 7</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <a href="#" class="btn-outline-gold">Read More Stories</a>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- ===== CALL TO ACTION ===== -->
+<!-- ============================================================ -->
+<section class="cta-section">
+    <div class="container">
+        <h2 class="fw-bold display-5">Give Your Child the <span style="color:#f9a825;">Gift of Great Education</span></h2>
+        <p class="fs-5 text-white-50 mb-4">Limited places available for the upcoming academic year. Apply now and secure a bright future.</p>
+        <div class="d-flex flex-wrap justify-content-center gap-3">
+            <a href="{{ url_for('apply') }}" class="btn-gold" style="background:#f9a825;color:#1a237e;padding:16px 50px;">
+                <i class="fas fa-user-plus me-2"></i>Apply Now – It’s Quick
+            </a>
+            <a href="{{ url_for('book_tour') }}" class="btn-outline-gold" style="color:white;border-color:rgba(255,255,255,0.4);background:rgba(255,255,255,0.1);">
+                <i class="fas fa-calendar-check me-2"></i>Schedule a Visit
+            </a>
+        </div>
+        <p class="mt-4 text-white-50 small">
+            <i class="fas fa-cross me-1" style="color:#f9a825;"></i> Education for Service 
+            <i class="fas fa-cross ms-1" style="color:#f9a825;"></i>
+        </p>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- ===== FOOTER ===== -->
+<!-- ============================================================ -->
+<footer class="py-4" style="background:#1a1a2e;color:white;">
+    <div class="container">
+        <div class="row text-center g-3">
+            <div class="col-md-3">
+                <i class="fas fa-map-marker-alt text-gold fa-2x mb-2"></i>
+                <p class="mb-0 small">Nairobi, Kenya</p>
+            </div>
+            <div class="col-md-3">
+                <i class="fas fa-phone text-gold fa-2x mb-2"></i>
+                <p class="mb-0 small">+254 700 000 000</p>
+            </div>
+            <div class="col-md-3">
+                <i class="fas fa-envelope text-gold fa-2x mb-2"></i>
+                <p class="mb-0 small">info@olassumption.ac.ke</p>
+            </div>
+            <div class="col-md-3">
+                <i class="fas fa-clock text-gold fa-2x mb-2"></i>
+                <p class="mb-0 small">Mon–Fri: 7:30AM – 4:30PM</p>
+            </div>
+        </div>
+        <hr class="border-secondary opacity-25">
+        <p class="text-center text-white-50 small mb-0">
+            &copy; 2026 Our Lady of Assumption Academy. 
+            <i class="fas fa-cross text-gold mx-1"></i> Education for Service.
+        </p>
+    </div>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const fadeElements = document.querySelectorAll('.fade-in');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => entry.target.classList.add('visible'), 150);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        fadeElements.forEach(el => observer.observe(el));
+    });
+</script>
+
+<style>
+    .tracking-wide {
+        letter-spacing: 2px;
+    }
+    .bg-opacity-10 {
+        --bs-bg-opacity: 0.1;
+    }
+    .text-purple {
+        color: #9b59b6;
+    }
+    .bg-purple {
+        background-color: #9b59b6;
+    }
+</style>
+
+{% endblock %}

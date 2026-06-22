@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block title %}Fee Structures - Admin{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold"><i class="fas fa-money-bill text-success me-2"></i>Fee Structures</h2>
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Back
+        </a>
+    </div>
+
+    <!-- Add Fee Form -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="fw-bold mb-3"><i class="fas fa-plus me-2"></i>Add Fee Structure</h5>
+            <form method="POST" action="{{ url_for('admin_create_fee') }}">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <input type="text" name="grade" class="form-control" placeholder="Grade *" required>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" name="tuition_fee" class="form-control" placeholder="Tuition" step="0.01">
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" name="activity_fee" class="form-control" placeholder="Activity" step="0.01">
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" name="lunch_fee" class="form-control" placeholder="Lunch" step="0.01">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" name="term" class="form-control" placeholder="Term (e.g. Term 1)">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" name="academic_year" class="form-control" placeholder="Year (e.g. 2026)">
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-check form-switch mt-2">
+                            <input class="form-check-input" type="checkbox" name="is_active" id="is_active" value="1" checked>
+                            <label class="form-check-label" for="is_active">Active</label>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-save me-1"></i>Add Fee
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Fee List -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Grade</th>
+                            <th>Tuition</th>
+                            <th>Activity</th>
+                            <th>Lunch</th>
+                            <th>Transport</th>
+                            <th>Other</th>
+                            <th>Total</th>
+                            <th>Term</th>
+                            <th>Year</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for fee in fees %}
+                        <tr>
+                            <td><strong>{{ fee.grade }}</strong></td>
+                            <td>KSh {{ fee.tuition_fee|round(2) }}</td>
+                            <td>KSh {{ fee.activity_fee|round(2) }}</td>
+                            <td>KSh {{ fee.lunch_fee|round(2) }}</td>
+                            <td>KSh {{ fee.transport_fee|round(2) }}</td>
+                            <td>KSh {{ fee.other_fees|round(2) }}</td>
+                            <td><strong>KSh {{ fee.total_fee|round(2) }}</strong></td>
+                            <td>{{ fee.term or '-' }}</td>
+                            <td>{{ fee.academic_year or '-' }}</td>
+                            <td>
+                                <span class="badge bg-{{ 'success' if fee.is_active else 'secondary' }}">
+                                    {{ 'Active' if fee.is_active else 'Inactive' }}
+                                </span>
+                            </td>
+                            <td>
+                                <form method="POST" action="{{ url_for('admin_delete_fee', id=fee.id) }}" style="display:inline;" onsubmit="return confirm('Delete this fee structure?')">
+                                    <button type="submit" class="btn btn-sm btn-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="11" class="text-center py-4 text-muted">No fee structures found</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

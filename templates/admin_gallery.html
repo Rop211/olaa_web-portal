@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}Gallery - Admin{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold"><i class="fas fa-images text-info me-2"></i>Gallery Management</h2>
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Back
+        </a>
+    </div>
+
+    <!-- Upload Form -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="fw-bold mb-3"><i class="fas fa-cloud-upload-alt me-2"></i>Upload New Image</h5>
+            <form method="POST" action="{{ url_for('admin_upload_gallery') }}" enctype="multipart/form-data">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <input type="file" name="image" class="form-control" accept="image/*" required>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" name="title" class="form-control" placeholder="Image title">
+                    </div>
+                    <div class="col-md-3">
+                        <select name="category" class="form-select">
+                            <option value="General">General</option>
+                            <option value="Academic">Academic</option>
+                            <option value="Sports">Sports</option>
+                            <option value="Arts">Arts</option>
+                            <option value="Events">Events</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-upload me-1"></i>Upload
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="caption" class="form-control" placeholder="Caption (optional)">
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="is_featured" id="is_featured" value="1">
+                            <label class="form-check-label" for="is_featured">Featured</label>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="number" name="sort_order" class="form-control" placeholder="Sort order" value="0">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Gallery Grid -->
+    <div class="row g-4">
+        {% for image in images %}
+        <div class="col-md-3 col-6">
+            <div class="card border-0 shadow-sm h-100">
+                <img src="{{ url_for('static', filename='uploads/' + image.filename) }}" class="card-img-top" alt="{{ image.title }}" style="height: 180px; object-fit: cover;">
+                <div class="card-body p-2">
+                    <h6 class="fw-bold small mb-0 text-truncate">{{ image.title or 'Untitled' }}</h6>
+                    <small class="text-muted">{{ image.category or 'General' }}</small>
+                    {% if image.is_featured %}
+                    <span class="badge bg-warning text-dark ms-1">Featured</span>
+                    {% endif %}
+                    <div class="d-flex gap-1 mt-1">
+                        <form method="POST" action="{{ url_for('admin_toggle_featured_gallery', id=image.id) }}" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-{{ 'warning' if image.is_featured else 'outline-warning' }}">
+                                <i class="fas fa-star"></i>
+                            </button>
+                        </form>
+                        <form method="POST" action="{{ url_for('admin_delete_gallery', id=image.id) }}" style="display:inline;" onsubmit="return confirm('Delete this image?')">
+                            <button type="submit" class="btn btn-sm btn-danger">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12 text-center py-5">
+            <i class="fas fa-cloud-upload-alt fa-5x text-muted mb-3"></i>
+            <p class="text-muted">No images uploaded yet</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

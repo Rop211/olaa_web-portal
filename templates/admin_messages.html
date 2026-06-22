@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}Messages - Admin{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold"><i class="fas fa-envelope text-danger me-2"></i>Contact Messages</h2>
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Back
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Subject</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for msg in messages %}
+                        <tr class="{{ 'table-light' if msg.is_read else 'fw-bold' }}">
+                            <td>#{{ msg.id }}</td>
+                            <td>{{ msg.name }}</td>
+                            <td>{{ msg.email }}</td>
+                            <td>{{ msg.phone or '-' }}</td>
+                            <td>{{ msg.subject or 'No subject' }}</td>
+                            <td>
+                                <span class="badge bg-{{ 'success' if msg.is_read else 'warning' }}">
+                                    {{ 'Read' if msg.is_read else 'Unread' }}
+                                </span>
+                            </td>
+                            <td>{{ msg.created_at.strftime('%d/%m/%y %H:%M') }}</td>
+                            <td>
+                                {% if not msg.is_read %}
+                                <form method="POST" action="{{ url_for('admin_mark_message_read', id=msg.id) }}" style="display:inline;">
+                                    <button type="submit" class="btn btn-sm btn-success" title="Mark as Read">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                </form>
+                                {% endif %}
+                                <form method="POST" action="{{ url_for('admin_delete_message', id=msg.id) }}" style="display:inline;" onsubmit="return confirm('Delete this message?')">
+                                    <button type="submit" class="btn btn-sm btn-danger" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="8" class="text-center py-4 text-muted">
+                                <i class="fas fa-inbox fa-3x d-block mb-2"></i>
+                                No messages found
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

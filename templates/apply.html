@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}Apply for Admission{% endblock %}
+
+{% block content %}
+
+<section class="py-5" style="background: #f5f7fa; min-height: 80vh;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                    <div class="card-header bg-primary text-white p-4">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-user-graduate fa-3x me-3"></i>
+                            <div>
+                                <h2 class="fw-bold mb-0">Apply for Admission</h2>
+                                <p class="mb-0 text-white-50">Fill in this form and we will contact you within 24 hours.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-5">
+                        <form method="POST" action="{{ url_for('apply') }}">
+                            <div class="row g-4">
+                                <div class="col-12">
+                                    <label class="form-label fw-bold">Child's full name <span class="text-danger">*</span></label>
+                                    <input type="text" name="child_name" class="form-control" placeholder="e.g. Faith Otieno" required>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Date of birth <span class="text-danger">*</span></label>
+                                    <input type="date" name="date_of_birth" class="form-control" required>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Grade applying for <span class="text-danger">*</span></label>
+                                    <select name="grade" class="form-select" required>
+                                        <option value="">-- Select grade --</option>
+                                        <option value="Pre-Primary 1">Pre-Primary 1</option>
+                                        <option value="Pre-Primary 2">Pre-Primary 2</option>
+                                        <option value="Grade 1">Grade 1</option>
+                                        <option value="Grade 2">Grade 2</option>
+                                        <option value="Grade 3">Grade 3</option>
+                                        <option value="Grade 4">Grade 4</option>
+                                        <option value="Grade 5">Grade 5</option>
+                                        <option value="Grade 6">Grade 6</option>
+                                        <option value="Grade 7">Grade 7</option>
+                                        <option value="Grade 8">Grade 8</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="col-12">
+                                    <label class="form-label fw-bold">Parent/Guardian name <span class="text-danger">*</span></label>
+                                    <input type="text" name="parent_name" class="form-control" placeholder="Full name" required>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Phone number <span class="text-danger">*</span></label>
+                                    <input type="tel" name="phone" class="form-control" placeholder="+254 7XX XXX XXX" required>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Email address <span class="text-danger">*</span></label>
+                                    <input type="email" name="email" class="form-control" placeholder="your@email.com" required>
+                                </div>
+                                
+                                <div class="col-12">
+                                    <label class="form-label fw-bold">Additional notes (optional)</label>
+                                    <textarea name="additional_notes" class="form-control" rows="3" placeholder="Any special requirements or questions..."></textarea>
+                                </div>
+                                
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary btn-lg w-100 py-3">
+                                        <i class="fas fa-paper-plane me-2"></i>Submit Application
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

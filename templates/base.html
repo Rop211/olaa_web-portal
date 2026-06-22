@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- ===== OPEN GRAPH META TAGS (for link previews) ===== -->
+    <meta property="og:title" content="Our Lady of Assumption Academy - OLAA" />
+    <meta property="og:description" content="A Catholic school committed to academic excellence, faith formation, and holistic development. Education for Service." />
+    <meta property="og:image" content="{{ url_for('static', filename='images/IMG_20260618_113822.jpg', _external=True) }}" />
+    <meta property="og:url" content="{{ request.url }}" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Our Lady of Assumption Academy - OLAA" />
+    <meta name="twitter:description" content="A Catholic school committed to academic excellence, faith formation, and holistic development." />
+    <meta name="twitter:image" content="{{ url_for('static', filename='images/IMG_20260618_113822.jpg', _external=True) }}" />
+
+    <title>Our Lady of Assumption Academy - {% block title %}Where Every Child's Future Begins{% endblock %}</title>
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- ===== AI CHATBOT CSS ===== -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chatbot.css') }}">
+    
+    <style>
+        /* ===== BASE ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; padding-top: 80px; overflow-x: hidden; background: #f8f9fa; }
+        
+        /* ===== CUSTOM HEADER ===== */
+        .custom-header {
+            background: linear-gradient(135deg, #1a237e, #0d47a1);
+            padding: 10px 0;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.3);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            border-bottom: 4px solid #f9a825;
+            transition: all 0.3s ease;
+        }
+        .custom-header.scrolled {
+            padding: 6px 0;
+            background: linear-gradient(135deg, #0d1a5e, #0a3a8a);
+        }
+        .custom-header .logo-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+        }
+        /* ===== LOGO – FIXED & VISIBLE ===== */
+        .custom-header .logo-img {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            object-fit: contain;
+            object-position: center;
+            border: 3px solid #f9a825;
+            background: white;
+            padding: 6px;
+            box-shadow: 0 0 25px rgba(249, 168, 37, 0.3);
+            transition: all 0.3s ease;
+            display: block;
+        }
+        .custom-header .logo-img:hover {
+            transform: scale(1.08) rotate(-5deg);
+            box-shadow: 0 0 35px rgba(249, 168, 37, 0.5);
+        }
+        .custom-header .logo-text {
+            color: white;
+            line-height: 1.2;
+        }
+        .custom-header .logo-text .school-name {
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+        .custom-header .logo-text .school-name .olaa {
+            background: #f9a825;
+            color: #1a237e;
+            padding: 2px 10px;
+            border-radius: 6px;
+            margin-right: 5px;
+            font-size: 1.1rem;
+        }
+        .custom-header .logo-text .school-name .highlight {
+            color: #f9a825;
+        }
+        .custom-header .logo-text .school-name .divider {
+            color: rgba(255,255,255,0.3);
+            margin: 0 5px;
+        }
+        .custom-header .logo-text .school-motto {
+            font-size: 0.7rem;
+            opacity: 0.85;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #f9a825;
+        }
+        .custom-header .logo-text .school-motto i {
+            color: #f9a825;
+            margin: 0 3px;
+        }
+        .custom-header .logo-text .school-motto .cross-icon {
+            color: #f9a825;
+            font-size: 0.6rem;
+        }
+        
+        /* ===== NAV LINKS ===== */
+        .custom-header .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .custom-header .nav-links > a:not(.btn):not(.dropdown-toggle) {
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            padding: 8px 14px;
+            border-radius: 8px;
+            position: relative;
+        }
+        .custom-header .nav-links > a:not(.btn):not(.dropdown-toggle):hover {
+            color: #f9a825;
+            background: rgba(249, 168, 37, 0.1);
+        }
+        .custom-header .nav-links > a:not(.btn):not(.dropdown-toggle).active {
+            color: #f9a825;
+            background: rgba(249, 168, 37, 0.15);
+        }
+        .custom-header .nav-links > a:not(.btn):not(.dropdown-toggle).active::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 2px;
+            background: #f9a825;
+            border-radius: 2px;
+        }
+        
+        /* ===== LOGIN DROPDOWN – VISIBLE ===== */
+        .custom-header .dropdown-login {
+            position: relative;
+        }
+        .custom-header .dropdown-login .dropdown-toggle {
+            background: rgba(249, 168, 37, 0.2);
+            border: 2px solid #f9a825;
+            color: #f9a825 !important;
+            padding: 6px 18px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+        .custom-header .dropdown-login .dropdown-toggle:hover {
+            background: #f9a825;
+            color: #1a237e !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(249, 168, 37, 0.4);
+        }
+        .custom-header .dropdown-login .dropdown-toggle i {
+            font-size: 1rem;
+        }
+        .custom-header .dropdown-login .dropdown-toggle .caret {
+            font-size: 0.7rem;
+            margin-left: 4px;
+        }
+        .custom-header .dropdown-login .dropdown-menu {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+            padding: 8px;
+            margin-top: 10px;
+            min-width: 200px;
+            background: white;
+            border-top: 3px solid #f9a825;
+        }
+        .custom-header .dropdown-login .dropdown-item {
+            border-radius: 8px;
+            padding: 10px 18px;
+            font-weight: 500;
+            color: #333;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .custom-header .dropdown-login .dropdown-item:hover {
+            background: #f0f4ff;
+            color: #0d47a1;
+        }
+        .custom-header .dropdown-login .dropdown-item i {
+            width: 22px;
+            font-size: 1rem;
+            text-align: center;
+        }
+        .custom-header .dropdown-login .dropdown-item .parent-icon {
+            color: #2e7d32;
+        }
+        .custom-header .dropdown-login .dropdown-item .admin-icon {
+            color: #0d47a1;
+        }
+        .custom-header .dropdown-login .dropdown-divider {
+            margin: 6px 0;
+            border-color: #e9ecef;
+        }
+        
+        /* ===== ENROLL NOW BUTTON ===== */
+        .custom-header .nav-links .btn-nav-apply {
+            background: #f9a825;
+            color: #1a237e;
+            padding: 8px 22px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            border: none;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .custom-header .nav-links .btn-nav-apply:hover {
+            background: #f57f17;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(249, 168, 37, 0.4);
+        }
+        .custom-header .nav-links .btn-nav-apply i {
+            margin-right: 6px;
+        }
+        
+        /* ===== MOBILE TOGGLE ===== */
+        .custom-header .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+        .custom-header .mobile-toggle:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 992px) {
+            .custom-header .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: linear-gradient(135deg, #1a237e, #0d47a1);
+                padding: 20px;
+                border-bottom: 4px solid #f9a825;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+                gap: 8px;
+                align-items: stretch;
+            }
+            .custom-header .nav-links.active {
+                display: flex;
+            }
+            .custom-header .nav-links > a:not(.btn):not(.dropdown-toggle) {
+                width: 100%;
+                text-align: center;
+                padding: 12px 20px;
+                border-radius: 8px;
+            }
+            .custom-header .nav-links > a:not(.btn):not(.dropdown-toggle).active::after {
+                display: none;
+            }
+            
+            .custom-header .dropdown-login {
+                width: 100%;
+            }
+            .custom-header .dropdown-login .dropdown-toggle {
+                width: 100%;
+                justify-content: center;
+                padding: 12px 20px;
+            }
+            .custom-header .dropdown-login .dropdown-menu {
+                position: static !important;
+                width: 100%;
+                margin-top: 5px;
+                box-shadow: none;
+                border: 1px solid rgba(255,255,255,0.2);
+                background: rgba(255,255,255,0.1);
+                backdrop-filter: blur(10px);
+            }
+            .custom-header .dropdown-login .dropdown-item {
+                color: white !important;
+                justify-content: center;
+            }
+            .custom-header .dropdown-login .dropdown-item:hover {
+                background: rgba(255,255,255,0.15);
+                color: #f9a825 !important;
+            }
+            .custom-header .dropdown-login .dropdown-divider {
+                border-color: rgba(255,255,255,0.1);
+            }
+            
+            .custom-header .nav-links .btn-nav-apply {
+                width: 100%;
+                text-align: center;
+                padding: 12px 20px;
+            }
+            .custom-header .mobile-toggle {
+                display: block;
+            }
+            .custom-header .logo-text .school-name {
+                font-size: 1.1rem;
+            }
+            .custom-header .logo-text .school-motto {
+                font-size: 0.6rem;
+                letter-spacing: 1px;
+            }
+            .custom-header .logo-img {
+                width: 50px;
+                height: 50px;
+            }
+            .custom-header .logo-text .school-name .olaa {
+                font-size: 0.9rem;
+                padding: 1px 8px;
+            }
+        }
+        @media (max-width: 576px) {
+            .custom-header .logo-text .school-name {
+                font-size: 0.85rem;
+            }
+            .custom-header .logo-text .school-motto {
+                font-size: 0.5rem;
+                letter-spacing: 0.5px;
+            }
+            .custom-header .logo-img {
+                width: 42px;
+                height: 42px;
+                padding: 4px;
+            }
+            .custom-header .logo-text .school-name .olaa {
+                font-size: 0.7rem;
+                padding: 1px 6px;
+            }
+            body { padding-top: 70px; }
+        }
+        
+        /* ===== EXISTING STYLES RETAINED ===== */
+        .btn { border-radius: 30px; padding: 10px 28px; font-weight: 600; transition: all 0.3s; }
+        .btn-primary { background: #0d47a1; border: none; }
+        .btn-primary:hover { background: #0a3a8a; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(13,71,161,0.3); }
+        .btn-warning { background: #f9a825; border: none; color: #1a237e; }
+        .btn-warning:hover { background: #f57f17; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(249,168,37,0.4); }
+        .btn-success { background: #2e7d32; border: none; }
+        .btn-success:hover { background: #1b5e20; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(46,125,50,0.3); }
+        .btn-outline-light:hover { background: rgba(255,255,255,0.1); }
+        .btn-outline-primary { border: 2px solid #0d47a1; color: #0d47a1; }
+        .btn-outline-primary:hover { background: #0d47a1; color: white; }
+        .btn-outline-success { border: 2px solid #2e7d32; color: #2e7d32; }
+        .btn-outline-success:hover { background: #2e7d32; color: white; }
+        
+        .card { border: none; border-radius: 16px; transition: transform 0.3s, box-shadow 0.3s; background: white; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 40px rgba(0,0,0,0.1) !important; }
+        
+        .form-control, .form-select { border-radius: 10px; padding: 12px 16px; border: 2px solid #e0e0e0; transition: border-color 0.3s; }
+        .form-control:focus, .form-select:focus { border-color: #0d47a1; box-shadow: 0 0 0 3px rgba(13,71,161,0.1); }
+        .form-label { font-weight: 600; color: #333; }
+        
+        .icon-box { width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: transform 0.3s; margin: 0 auto; }
+        .icon-box:hover { transform: scale(1.1) rotate(5deg); }
+        
+        .stat-item { padding: 15px; }
+        .stat-item h2 { font-weight: 800; }
+        
+        .gallery-item { position: relative; overflow: hidden; border-radius: 12px; cursor: pointer; }
+        .gallery-item img { width: 100%; height: 250px; object-fit: cover; transition: transform 0.5s; }
+        .gallery-item:hover img { transform: scale(1.05); }
+        .gallery-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px; background: linear-gradient(transparent, rgba(0,0,0,0.7)); color: white; transform: translateY(100%); transition: transform 0.3s; }
+        .gallery-item:hover .gallery-overlay { transform: translateY(0); }
+        
+        .admin-card { border: none; border-radius: 16px; padding: 20px; transition: transform 0.3s; }
+        .admin-card:hover { transform: translateY(-5px); }
+        .admin-card .stat-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+        
+        footer a { text-decoration: none; transition: color 0.3s; }
+        footer a:hover { color: #f9a825 !important; }
+        .social-icons a { display: inline-block; transition: transform 0.3s; font-size: 1.2rem; }
+        .social-icons a:hover { transform: translateY(-3px); }
+        
+        .bg-gradient-primary { background: linear-gradient(135deg, #1a237e, #0d47a1); }
+        .text-shadow { text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .rounded-4 { border-radius: 20px; }
+        .rounded-5 { border-radius: 30px; }
+        
+        .alert { border-radius: 12px; border: none; }
+        
+        @media (max-width: 768px) {
+            .hero-section { text-align: center; padding: 40px 0 !important; }
+            .hero-section h1 { font-size: 2rem !important; }
+            .btn { padding: 8px 20px; font-size: 0.9rem; }
+            .display-4 { font-size: 2.2rem !important; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ========== CUSTOM HEADER ========== -->
+<header class="custom-header" id="mainHeader">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <!-- Logo and School Name -->
+            <a href="{{ url_for('index') }}" class="logo-wrapper">
+                <img src="{{ url_for('static', filename='images/olaa-logo.png') }}" 
+                     alt="OLAA School Logo - Our Lady of Assumption Academy" 
+                     class="logo-img"
+                     onerror="this.src='https://via.placeholder.com/65x65/1a237e/f9a825?text=OLAA'">
+                <div class="logo-text">
+                    <div class="school-name">
+                        <span class="olaa">OLAA</span>
+                        <span class="divider">|</span>
+                        Our Lady of <span class="highlight">Assumption Academy</span>
+                    </div>
+                    <div class="school-motto">
+                        <i class="fas fa-cross cross-icon"></i>
+                        Education for Service
+                        <i class="fas fa-cross cross-icon"></i>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- ===== NAVIGATION LINKS ===== -->
+            <nav class="nav-links" id="navLinks">
+                <!-- Standard Links -->
+                <a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                <a href="{{ url_for('about') }}" class="{% if request.endpoint == 'about' %}active{% endif %}">
+                    <i class="fas fa-info-circle"></i> About
+                </a>
+                <a href="{{ url_for('programs') }}" class="{% if request.endpoint == 'programs' %}active{% endif %}">
+                    <i class="fas fa-book-open"></i> Programs
+                </a>
+                <a href="{{ url_for('gallery') }}" class="{% if request.endpoint == 'gallery' %}active{% endif %}">
+                    <i class="fas fa-images"></i> Gallery
+                </a>
+                <a href="{{ url_for('events') }}" class="{% if request.endpoint == 'events' %}active{% endif %}">
+                    <i class="fas fa-calendar-alt"></i> Events
+                </a>
+                <a href="{{ url_for('contact') }}" class="{% if request.endpoint == 'contact' %}active{% endif %}">
+                    <i class="fas fa-envelope"></i> Contact
+                </a>
+                
+                <!-- ===== LOGIN DROPDOWN ===== -->
+                <div class="dropdown-login dropdown">
+                    <a class="dropdown-toggle" href="#" id="loginDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                        <span class="caret"><i class="fas fa-chevron-down"></i></span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="loginDropdown">
+                        <li>
+                            <a class="dropdown-item" href="{{ url_for('parent_login') }}">
+                                <i class="fas fa-user-friends parent-icon"></i> Parent Login
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ url_for('admin_login') }}">
+                                <i class="fas fa-user-shield admin-icon"></i> Admin Login
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item" href="{{ url_for('apply') }}">
+                                <i class="fas fa-user-plus text-warning"></i> Apply Now
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Enroll Now -->
+                <a href="{{ url_for('apply') }}" class="btn-nav-apply">
+                    <i class="fas fa-user-plus"></i> Enroll Now
+                </a>
+            </nav>
+            
+            <!-- Mobile Toggle -->
+            <button class="mobile-toggle" onclick="toggleMenu()" aria-label="Toggle menu">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- ========== FLASH MESSAGES ========== -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="container mt-4 pt-3">
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show shadow-sm" role="alert">
+                    <i class="fas fa-{% if category == 'success' %}check-circle{% elif category == 'danger' %}exclamation-circle{% elif category == 'warning' %}exclamation-triangle{% else %}info-circle{% endif %} me-2"></i>
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+<!-- ========== PAGE CONTENT ========== -->
+{% block content %}{% endblock %}
+
+<!-- ========== FOOTER ========== -->
+<footer class="bg-dark text-white py-5 mt-5">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <h5 class="fw-bold mb-3">
+                    <span style="background: #f9a825; color: #1a237e; padding: 4px 12px; border-radius: 6px; margin-right: 8px;">OLAA</span>
+                    Our Lady of Assumption Academy
+                </h5>
+                <p class="text-muted"><i class="fas fa-cross text-warning me-2"></i>Education for Service</p>
+                <p class="text-muted">Where every child's future begins. Quality education, caring teachers, and a safe environment for your child to grow and thrive.</p>
+                <div class="social-icons mt-3">
+                    <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-white me-3"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-white me-3"><i class="fab fa-youtube"></i></a>
+                    <a href="#" class="text-white me-3"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <h6 class="fw-bold mb-3">Quick Links</h6>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><a href="{{ url_for('about') }}" class="text-muted">About Us</a></li>
+                    <li class="mb-2"><a href="{{ url_for('programs') }}" class="text-muted">Programs</a></li>
+                    <li class="mb-2"><a href="{{ url_for('gallery') }}" class="text-muted">Gallery</a></li>
+                    <li class="mb-2"><a href="{{ url_for('events') }}" class="text-muted">Events</a></li>
+                    <li class="mb-2"><a href="{{ url_for('contact') }}" class="text-muted">Contact</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3">
+                <h6 class="fw-bold mb-3">Contact Info</h6>
+                <ul class="list-unstyled text-muted">
+                    <li class="mb-2"><i class="fas fa-map-marker-alt me-2 text-warning"></i>Nairobi, Kenya</li>
+                    <li class="mb-2"><i class="fas fa-phone me-2 text-warning"></i>+254 700 000 000</li>
+                    <li class="mb-2"><i class="fas fa-envelope me-2 text-warning"></i>info@olassumption.ac.ke</li>
+                    <li class="mb-2"><i class="fas fa-clock me-2 text-warning"></i>Mon-Fri: 7:30AM - 4:30PM</li>
+                </ul>
+            </div>
+            <div class="col-md-3">
+                <h6 class="fw-bold mb-3">Newsletter</h6>
+                <p class="text-muted small">Subscribe for updates and news</p>
+                <form action="{{ url_for('subscribe') }}" method="POST" class="d-flex flex-column gap-2">
+                    <input type="email" name="email" class="form-control form-control-sm" placeholder="Your email" required>
+                    <button type="submit" class="btn btn-warning btn-sm w-100">
+                        <i class="fas fa-paper-plane me-1"></i>Subscribe
+                    </button>
+                </form>
+            </div>
+        </div>
+        <hr class="border-secondary mt-4">
+        <p class="text-center text-muted small mb-0">&copy; 2026 Our Lady of Assumption Academy. All rights reserved.</p>
+    </div>
+</footer>
+
+<!-- ========== SCRIPTS ========== -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Mobile menu toggle
+    function toggleMenu() {
+        const nav = document.getElementById('navLinks');
+        nav.classList.toggle('active');
+    }
+
+    // Close menu when clicking outside
+    document.addEventListener('click', function(event) {
+        const nav = document.getElementById('navLinks');
+        const toggle = document.querySelector('.mobile-toggle');
+        if (nav && toggle && !nav.contains(event.target) && !toggle.contains(event.target)) {
+            nav.classList.remove('active');
+        }
+    });
+
+    // Auto-dismiss alerts after 5 seconds
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(() => {
+            document.querySelectorAll('.alert').forEach(el => {
+                const bsAlert = new bootstrap.Alert(el);
+                setTimeout(() => bsAlert.close(), 5000);
+            });
+        }, 2000);
+        
+        // Scroll effect for header
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('mainHeader');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+    });
+</script>
+
+<!-- ===== AI CHATBOT WIDGET ===== -->
+<button id="chat-toggle" aria-label="Open chat assistant">
+    <span class="chat-icon"><i class="fas fa-comment-dots"></i></span>
+    <span class="close-icon"><i class="fas fa-times"></i></span>
+</button>
+
+<div id="chat-window">
+    <div id="chat-header">
+        <div>
+            <h6><i class="fas fa-robot me-2" style="color:#f9a825;"></i> Admissions Assistant</h6>
+            <small>Ask me about admissions, fees, tours &amp; more</small>
+        </div>
+        <i class="fas fa-school" style="font-size:1.4rem; opacity:0.5;"></i>
+    </div>
+    <div id="chat-messages">
+        <div class="message bot">
+            👋 Hello! I'm the OLAA Admissions Assistant. 
+            Ask me anything about <strong>admissions, fees, school tours, uniform, curriculum</strong>, or any other question!
+            <span class="time">Just now</span>
+        </div>
+    </div>
+    <div id="chat-input-area">
+        <input type="text" id="chat-input" placeholder="Type your question..." maxlength="500">
+        <button id="chat-send"><i class="fas fa-paper-plane"></i></button>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/chatbot.js') }}"></script>
+
+</body>
+</html>

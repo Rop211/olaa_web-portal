@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+
+{% block title %}Attendance - Admin{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold"><i class="fas fa-clipboard-check text-success me-2"></i>Student Attendance</h2>
+        <div>
+            <a href="{{ url_for('admin_attendance_report') }}" class="btn btn-info me-2">
+                <i class="fas fa-file-alt me-1"></i>Reports
+            </a>
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-1"></i>Back
+            </a>
+        </div>
+    </div>
+
+    <!-- Date and Class Selector -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <form method="GET" class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">Date</label>
+                    <input type="date" id="datePicker" name="date" class="form-control" value="{{ selected_date }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">Grade</label>
+                    <select name="grade" class="form-select">
+                        <option value="all">All Grades</option>
+                        <option value="Pre-Primary 1">Pre-Primary 1</option>
+                        <option value="Pre-Primary 2">Pre-Primary 2</option>
+                        <option value="Grade 1">Grade 1</option>
+                        <option value="Grade 2">Grade 2</option>
+                        <option value="Grade 3">Grade 3</option>
+                        <option value="Grade 4">Grade 4</option>
+                        <option value="Grade 5">Grade 5</option>
+                        <option value="Grade 6">Grade 6</option>
+                        <option value="Grade 7">Grade 7</option>
+                        <option value="Grade 8">Grade 8</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-search me-1"></i>Load
+                    </button>
+                </div>
+                <div class="col-md-4 text-end">
+                    <span class="badge bg-success">Present: {{ present_count or 0 }}</span>
+                    <span class="badge bg-danger">Absent: {{ absent_count or 0 }}</span>
+                    <span class="badge bg-warning text-dark">Late: {{ late_count or 0 }}</span>
+                    <span class="badge bg-info">Total: {{ total_students or 0 }}</span>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Attendance Table -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+            <form method="POST" action="{{ url_for('admin_mark_attendance') }}">
+                <input type="hidden" name="date" value="{{ selected_date }}">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Admission No</th>
+                                <th>Student Name</th>
+                                <th>Grade</th>
+                                <th>Status</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in students %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td><code>{{ student.admission_number }}</code></td>
+                                <td><strong>{{ student.full_name }}</strong></td>
+                                <td>{{ student.grade }}</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <input type="radio" class="btn-check" name="attendance_{{ student.id }}" id="present_{{ student.id }}" value="present" autocomplete="off" checked>
+                                        <label class="btn btn-outline-success btn-sm" for="present_{{ student.id }}">Present</label>
+                                        
+                                        <input type="radio" class="btn-check" name="attendance_{{ student.id }}" id="absent_{{ student.id }}" value="absent" autocomplete="off">
+                                        <label class="btn btn-outline-danger btn-sm" for="absent_{{ student.id }}">Absent</label>
+                                        
+                                        <input type="radio" class="btn-check" name="attendance_{{ student.id }}" id="late_{{ student.id }}" value="late" autocomplete="off">
+                                        <label class="btn btn-outline-warning btn-sm" for="late_{{ student.id }}">Late</label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <input type="text" name="notes_{{ student.id }}" class="form-control form-control-sm" placeholder="Notes">
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="6" class="text-center py-4 text-muted">No students found</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% if students %}
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save me-1"></i>Save Attendance
+                    </button>
+                    <button type="reset" class="btn btn-secondary">
+                        <i class="fas fa-undo me-1"></i>Reset
+                    </button>
+                </div>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Auto submit on date change
+    document.getElementById('datePicker').addEventListener('change', function() {
+        this.closest('form').submit();
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}Class Results - {{ grade }}{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold"><i class="fas fa-users text-primary me-2"></i>Class Results - {{ grade }}</h2>
+            <p class="text-muted">{{ students|length }} students | {{ exams|length }} exams</p>
+        </div>
+        <a href="{{ url_for('admin_results_dashboard') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Back
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Student</th>
+                            {% for exam in exams %}
+                            <th>{{ exam.subject }}</th>
+                            {% endfor %}
+                            <th>Average</th>
+                            <th>Grade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student_id, data in results_matrix.items() %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td><strong>{{ data.student.full_name }}</strong></td>
+                            {% for exam in exams %}
+                            <td>
+                                {% set result = data.results.get(exam.id) %}
+                                {% if result %}
+                                    <span class="badge bg-{{ 'success' if result.grade in ['A', 'A-', 'B+'] else 'warning' if result.grade in ['B', 'B-', 'C+'] else 'danger' }}">
+                                        {{ result.marks_obtained }}
+                                    </span>
+                                {% else %}
+                                    <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            {% endfor %}
+                            <td><strong>{{ data.average|round(1) if data.average else '-' }}%</strong></td>
+                            <td>
+                                {% if data.average %}
+                                <span class="badge bg-{{ 'success' if data.average >= 70 else 'warning' if data.average >= 50 else 'danger' }}">
+                                    {{ data.grade or '-' }}
+                                </span>
+                                {% else %}
+                                <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="{{ exams|length + 4 }}" class="text-center py-4 text-muted">No data available</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

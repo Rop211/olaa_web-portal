@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block title %}Gallery{% endblock %}
+
+{% block content %}
+
+<!-- ===== HERO ===== -->
+<section class="py-5 bg-gradient-primary text-white">
+    <div class="container text-center">
+        <h1 class="display-4 fw-bold">Our Gallery</h1>
+        <p class="lead">A glimpse into life at Bright Minds Academy</p>
+    </div>
+</section>
+
+<!-- ===== GALLERY ===== -->
+<section class="py-5">
+    <div class="container">
+        {% if categories %}
+        <div class="d-flex flex-wrap justify-content-center gap-2 mb-4">
+            <button class="btn btn-outline-primary btn-sm filter-btn active" data-filter="all">All</button>
+            {% for category in categories %}
+            <button class="btn btn-outline-primary btn-sm filter-btn" data-filter="{{ category }}">{{ category }}</button>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        {% if images %}
+        <div class="row g-4 gallery-grid">
+            {% for image in images %}
+            <div class="col-md-4 col-lg-3 gallery-item-wrapper" data-category="{{ image.category or 'General' }}">
+                <div class="gallery-item shadow-sm">
+                    <img src="{{ url_for('static', filename='uploads/' + image.filename) }}" alt="{{ image.title }}" class="img-fluid">
+                    <div class="gallery-overlay">
+                        <h6 class="mb-0">{{ image.title or 'Untitled' }}</h6>
+                        <small>{{ image.category or 'General' }}</small>
+                        {% if image.caption %}
+                        <p class="small mb-0">{{ image.caption }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-images fa-5x text-muted mb-3"></i>
+            <p class="text-muted">No images uploaded yet. Check back soon!</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Gallery filter
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const items = document.querySelectorAll('.gallery-item-wrapper');
+    
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const filter = this.dataset.filter;
+            
+            // Update active button
+            filterBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Filter items
+            items.forEach(item => {
+                if (filter === 'all' || item.dataset.category === filter) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    });
+});
+</script>
+
+<style>
+.gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    cursor: pointer;
+}
+.gallery-item img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    transition: transform 0.5s;
+}
+.gallery-item:hover img {
+    transform: scale(1.05);
+}
+.gallery-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.7));
+    color: white;
+    transform: translateY(100%);
+    transition: transform 0.3s;
+}
+.gallery-item:hover .gallery-overlay {
+    transform: translateY(0);
+}
+.filter-btn.active {
+    background: #0d47a1;
+    color: white;
+}
+.filter-btn {
+    transition: all 0.3s;
+}
+</style>
+
+{% endblock %}

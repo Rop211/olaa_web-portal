@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact Us{% endblock %}
+
+{% block content %}
+
+<!-- ===== HERO ===== -->
+<section class="py-5 bg-gradient-primary text-white">
+    <div class="container text-center">
+        <h1 class="display-4 fw-bold">Contact Us</h1>
+        <p class="lead">We'd love to hear from you. Reach out with any questions.</p>
+    </div>
+</section>
+
+<!-- ===== CONTENT ===== -->
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            <!-- Contact Info -->
+            <div class="col-lg-5">
+                <div class="card border-0 shadow-lg p-4 h-100">
+                    <h3 class="fw-bold mb-4">Get In Touch</h3>
+                    
+                    <div class="d-flex mb-3">
+                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px; flex-shrink: 0;">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-0">Address</h6>
+                            <p class="text-muted">{{ settings.school_address or 'Nairobi, Kenya' }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex mb-3">
+                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px; flex-shrink: 0;">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-0">Phone</h6>
+                            <p class="text-muted">{{ settings.school_phone or '+254 700 000 000' }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex mb-3">
+                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px; flex-shrink: 0;">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-0">Email</h6>
+                            <p class="text-muted">{{ settings.school_email or 'info@brightminds.ac.ke' }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex">
+                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px; flex-shrink: 0;">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-0">School Hours</h6>
+                            <p class="text-muted">Mon-Fri: 7:30 AM - 4:30 PM</p>
+                        </div>
+                    </div>
+                    
+                    <hr class="my-4">
+                    
+                    <div>
+                        <h6 class="fw-bold mb-2">Follow Us</h6>
+                        <div class="d-flex gap-3">
+                            <a href="{{ settings.school_facebook or '#' }}" class="btn btn-outline-primary btn-sm" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                            <a href="{{ settings.school_twitter or '#' }}" class="btn btn-outline-info btn-sm" target="_blank"><i class="fab fa-twitter"></i></a>
+                            <a href="{{ settings.school_instagram or '#' }}" class="btn btn-outline-danger btn-sm" target="_blank"><i class="fab fa-instagram"></i></a>
+                            <a href="{{ settings.school_youtube or '#' }}" class="btn btn-outline-danger btn-sm" target="_blank"><i class="fab fa-youtube"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Contact Form -->
+            <div class="col-lg-7">
+                <div class="card border-0 shadow-lg p-4">
+                    <h3 class="fw-bold mb-4">Send a Message</h3>
+                    <form method="POST" action="{{ url_for('contact') }}">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Full Name <span class="text-danger">*</span></label>
+                                <input type="text" name="name" class="form-control" placeholder="Your name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Email <span class="text-danger">*</span></label>
+                                <input type="email" name="email" class="form-control" placeholder="your@email.com" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Phone (optional)</label>
+                                <input type="tel" name="phone" class="form-control" placeholder="+254 7XX XXX XXX">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Subject</label>
+                                <input type="text" name="subject" class="form-control" placeholder="Subject">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-bold">Message <span class="text-danger">*</span></label>
+                                <textarea name="message" class="form-control" rows="5" placeholder="Your message..." required></textarea>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary btn-lg w-100 py-3">
+                                    <i class="fas fa-paper-plane me-2"></i>Send Message
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== MAP ===== -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="card border-0 shadow-sm overflow-hidden">
+            <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d255282.35853743783!2d36.68219672215668!3d-1.3028611749397316!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f1172d84d49a7%3A0xf7cf0254b297924c!2sNairobi%2C%20Kenya!5e0!3m2!1sen!2s!4v1700000000000" 
+                width="100%" 
+                height="350" 
+                style="border:0;" 
+                allowfullscreen="" 
+                loading="lazy">
+            </iframe>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

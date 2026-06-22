@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+
+{% block title %}Student Results - {{ student.full_name }}{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold"><i class="fas fa-user-graduate text-primary me-2"></i>Student Results</h2>
+            <p class="text-muted">{{ student.full_name }} | {{ student.grade }} | {{ student.admission_number }}</p>
+        </div>
+        <div>
+            <a href="{{ url_for('admin_student_detail', id=student.id) }}" class="btn btn-info me-2">
+                <i class="fas fa-user me-1"></i>Profile
+            </a>
+            <a href="{{ url_for('admin_students') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-1"></i>Back
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-3 col-6">
+            <div class="card border-0 shadow-sm p-3 text-center bg-primary text-white">
+                <h3>{{ results|length }}</h3>
+                <small>Total Exams</small>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card border-0 shadow-sm p-3 text-center bg-success text-white">
+                <h3>{{ average|round(1) if average else '0' }}%</h3>
+                <small>Average Score</small>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card border-0 shadow-sm p-3 text-center bg-warning text-dark">
+                <h3>{{ highest|round(1) if highest else '0' }}%</h3>
+                <small>Highest Score</small>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card border-0 shadow-sm p-3 text-center bg-info text-white">
+                <h3>{{ lowest|round(1) if lowest else '0' }}%</h3>
+                <small>Lowest Score</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white fw-bold d-flex justify-content-between align-items-center">
+            <span><i class="fas fa-list me-2"></i>All Results</span>
+            <span class="badge bg-primary">{{ results|length }} Records</span>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Exam Name</th>
+                            <th>Subject</th>
+                            <th>Term</th>
+                            <th>Marks</th>
+                            <th>Total</th>
+                            <th>Percentage</th>
+                            <th>Grade</th>
+                            <th>Remarks</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for result in results %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td><strong>{{ result.exam.name }}</strong></td>
+                            <td>{{ result.exam.subject }}</td>
+                            <td><span class="badge bg-secondary">{{ result.exam.term }}</span></td>
+                            <td>{{ result.marks_obtained }}</td>
+                            <td>{{ result.total_marks }}</td>
+                            <td>{{ ((result.marks_obtained / result.total_marks) * 100)|round(1) }}%</td>
+                            <td>
+                                <span class="badge bg-{{ 'success' if result.grade in ['A', 'A-', 'B+'] else 'warning' if result.grade in ['B', 'B-', 'C+'] else 'danger' }}" style="font-size: 1rem;">
+                                    {{ result.grade }}
+                                </span>
+                            </td>
+                            <td>{{ result.remarks or '-' }}</td>
+                            <td>
+                                <span class="badge bg-{{ 'success' if result.is_published else 'secondary' }}">
+                                    {{ 'Published' if result.is_published else 'Pending' }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="10" class="text-center py-4 text-muted">No results found</td></tr>
+                        {% endfor %}
+                    </tbody>
+                    {% if results %}
+                    <tfoot class="table-light">
+                        <tr>
+                            <th colspan="4" class="text-end">Summary:</th>
+                            <th>{{ total_marks|round(1) if total_marks else '0' }}</th>
+                            <th>{{ total_possible|round(1) if total_possible else '0' }}</th>
+                            <th><strong>{{ average|round(1) if average else '0' }}%</strong></th>
+                            <th>
+                                <span class="badge bg-{{ 'success' if average >= 70 else 'warning' if average >= 50 else 'danger' }}" style="font-size: 1rem;">
+                                    {% if average >= 80 %}A{% elif average >= 70 %}B{% elif average >= 60 %}C{% elif average >= 50 %}D{% else %}E{% endif %}
+                                </span>
+                            </th>
+                            <th colspan="2"></th>
+                        </tr>
+                    </tfoot>
+                    {% endif %}
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 mt-2">
+        <div class="col-md-4">
+            <a href="{{ url_for('admin_generate_report_card', student_id=student.id, term='Term 1') }}" class="btn btn-danger w-100">
+                <i class="fas fa-file-pdf me-1"></i>Report Card (Term 1)
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="{{ url_for('admin_generate_report_card', student_id=student.id, term='Term 2') }}" class="btn btn-danger w-100">
+                <i class="fas fa-file-pdf me-1"></i>Report Card (Term 2)
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="{{ url_for('admin_generate_report_card', student_id=student.id, term='Term 3') }}" class="btn btn-danger w-100">
+                <i class="fas fa-file-pdf me-1"></i>Report Card (Term 3)
+            </a>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('resultsChart');
+    if (ctx) {
+        const labels = [{% for result in results %}"{{ result.exam.subject }}",{% endfor %}];
+        const scores = [{% for result in results %}{{ ((result.marks_obtained / result.total_marks) * 100)|round(1) }},{% endfor %}];
+        const grades = [{% for result in results %}"{{ result.grade }}",{% endfor %}];
+        
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Score (%)',
+                    data: scores,
+                    backgroundColor: scores.map(score => 
+                        score >= 70 ? 'rgba(40, 167, 69, 0.7)' :
+                        score >= 50 ? 'rgba(255, 193, 7, 0.7)' :
+                        'rgba(220, 53, 69, 0.7)'
+                    ),
+                    borderColor: scores.map(score => 
+                        score >= 70 ? '#28a745' :
+                        score >= 50 ? '#ffc107' :
+                        '#dc3545'
+                    ),
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            afterLabel: function(context) {
+                                return 'Grade: ' + grades[context.dataIndex];
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+});
+</script>
+
+{% endblock %}

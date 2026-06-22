@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% block title %}Fees - Parent Portal{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+    <!-- Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold"><i class="fas fa-money-bill text-success me-2"></i>Fees & Payments</h2>
+        <a href="{{ url_for('parent_dashboard') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
+        </a>
+    </div>
+
+    <!-- Summary -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm p-3 text-center bg-success text-white">
+                <h3 class="fw-bold">KSh {{ total_paid|round(2) if total_paid else '0' }}</h3>
+                <small>Total Paid</small>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm p-3 text-center bg-danger text-white">
+                <h3 class="fw-bold">KSh {{ outstanding|round(2) if outstanding else '0' }}</h3>
+                <small>Outstanding Balance</small>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm p-3 text-center bg-info text-white">
+                <h3 class="fw-bold">KSh {{ total_fees|round(2) if total_fees else '0' }}</h3>
+                <small>Total Fees</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fee Structure -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white fw-bold">
+            <i class="fas fa-list me-2"></i>Fee Structure by Grade
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Child</th>
+                            <th>Grade</th>
+                            <th>Tuition</th>
+                            <th>Activity</th>
+                            <th>Lunch</th>
+                            <th>Transport</th>
+                            <th>Other</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for child in children %}
+                        <tr>
+                            <td><strong>{{ child.full_name }}</strong></td>
+                            <td>{{ child.grade }}</td>
+                            <td>KSh {{ child.fee_structure.tuition_fee|round(2) if child.fee_structure else '0' }}</td>
+                            <td>KSh {{ child.fee_structure.activity_fee|round(2) if child.fee_structure else '0' }}</td>
+                            <td>KSh {{ child.fee_structure.lunch_fee|round(2) if child.fee_structure else '0' }}</td>
+                            <td>KSh {{ child.fee_structure.transport_fee|round(2) if child.fee_structure else '0' }}</td>
+                            <td>KSh {{ child.fee_structure.other_fees|round(2) if child.fee_structure else '0' }}</td>
+                            <td><strong>KSh {{ child.fee_structure.total_fee|round(2) if child.fee_structure else '0' }}</strong></td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="8" class="text-center py-4 text-muted">No children enrolled</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment History -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white fw-bold">
+            <i class="fas fa-history me-2"></i>Payment History
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Receipt #</th>
+                            <th>Child</th>
+                            <th>Amount</th>
+                            <th>Method</th>
+                            <th>Date</th>
+                            <th>Term</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for payment in payments %}
+                        <tr>
+                            <td><code>{{ payment.receipt_number }}</code></td>
+                            <td>{{ payment.student.full_name if payment.student else 'N/A' }}</td>
+                            <td><strong>KSh {{ payment.amount|round(2) }}</strong></td>
+                            <td>{{ payment.payment_method or 'Cash' }}</td>
+                            <td>{{ payment.payment_date.strftime('%d/%m/%y') }}</td>
+                            <td>{{ payment.term or '-' }}</td>
+                            <td>
+                                <span class="badge bg-{{ 'success' if payment.status == 'Paid' else 'warning' if payment.status == 'Pending' else 'danger' }}">
+                                    {{ payment.status }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="7" class="text-center py-4 text-muted">No payment history</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

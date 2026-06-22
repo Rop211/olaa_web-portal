@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+
+{% block title %}Child Progress{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+    <!-- Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold"><i class="fas fa-chart-line text-primary me-2"></i>{{ child.full_name }}'s Progress</h2>
+            <p class="text-muted">Grade: {{ child.grade }} | Admission: {{ child.admission_number }}</p>
+        </div>
+        <div>
+            <a href="{{ url_for('parent_dashboard') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Profile Card -->
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 100px; height: 100px;">
+                        <span class="display-4 fw-bold">{{ child.first_name[0] }}{{ child.last_name[0] }}</span>
+                    </div>
+                    <h5 class="fw-bold">{{ child.full_name }}</h5>
+                    <p class="text-muted">{{ child.grade }}</p>
+                    <hr>
+                    <div class="text-start">
+                        <p><strong><i class="fas fa-calendar me-2"></i>Date of Birth:</strong> {{ child.date_of_birth.strftime('%d %B %Y') }}</p>
+                        <p><strong><i class="fas fa-venus-mars me-2"></i>Gender:</strong> {{ child.gender or 'Not specified' }}</p>
+                        <p><strong><i class="fas fa-calendar-check me-2"></i>Enrolled:</strong> {{ child.enrolled_date.strftime('%d %B %Y') }}</p>
+                        <p><strong><i class="fas fa-id-card me-2"></i>Admission No:</strong> {{ child.admission_number }}</p>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-6">
+                            <span class="badge bg-{{ 'success' if child.is_active else 'secondary' }}" style="font-size: 1rem;">
+                                {{ 'Active' if child.is_active else 'Inactive' }}
+                            </span>
+                        </div>
+                        <div class="col-6">
+                            <span class="badge bg-primary" style="font-size: 1rem;">
+                                {{ attendance_rate }}% Attendance
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Attendance -->
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white fw-bold">
+                    <i class="fas fa-check-circle text-success me-2"></i>Attendance Summary
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-3">
+                            <h3 class="text-success">{{ present_days or '0' }}</h3>
+                            <small class="text-muted">Present</small>
+                        </div>
+                        <div class="col-3">
+                            <h3 class="text-danger">{{ absent_days or '0' }}</h3>
+                            <small class="text-muted">Absent</small>
+                        </div>
+                        <div class="col-3">
+                            <h3 class="text-warning">{{ late_days or '0' }}</h3>
+                            <small class="text-muted">Late</small>
+                        </div>
+                        <div class="col-3">
+                            <h3 class="text-primary">{{ total_days or '0' }}</h3>
+                            <small class="text-muted">Total Days</small>
+                        </div>
+                    </div>
+                    <div class="progress mt-3" style="height: 25px;">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: {{ attendance_rate or 0 }}%;">
+                            {{ attendance_rate or 0 }}% Attendance
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <h6 class="fw-bold">Recent Attendance</h6>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                        <th>Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for record in attendance_records[:10] %}
+                                    <tr>
+                                        <td>{{ record.date.strftime('%d %B %Y') }}</td>
+                                        <td>
+                                            <span class="badge bg-{{ 'success' if record.status == 'present' else 'danger' if record.status == 'absent' else 'warning' }}">
+                                                {{ record.status|capitalize }}
+                                            </span>
+                                        </td>
+                                        <td>{{ record.notes or '-' }}</td>
+                                    </tr>
+                                    {% else %}
+                                    <tr><td colspan="3" class="text-center text-muted">No attendance records</td></tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grades -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white fw-bold">
+                    <i class="fas fa-graduation-cap text-warning me-2"></i>Grades
+                </div>
+                <div class="card-body">
+                    {% if grades %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Exam</th>
+                                    <th>Subject</th>
+                                    <th>Score</th>
+                                    <th>Grade</th>
+                                    <th>Term</th>
+                                    <th>Remarks</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for grade in grades %}
+                                <tr>
+                                    <td>{{ grade.exam.name }}</td>
+                                    <td>{{ grade.exam.subject }}</td>
+                                    <td>{{ grade.score }}%</td>
+                                    <td>
+                                        <span class="badge bg-{{ 'success' if grade.grade in ['A', 'B'] else 'warning' if grade.grade in ['C'] else 'danger' }}">
+                                            {{ grade.grade }}
+                                        </span>
+                                    </td>
+                                    <td>{{ grade.exam.term }}</td>
+                                    <td>{{ grade.remarks or '-' }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-center text-muted py-3">No grades available yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Payment History -->
+            <div class="card border-0 shadow-sm mt-4">
+                <div class="card-header bg-white fw-bold">
+                    <i class="fas fa-receipt text-success me-2"></i>Payment History
+                </div>
+                <div class="card-body">
+                    {% if payments %}
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Receipt #</th>
+                                    <th>Amount</th>
+                                    <th>Method</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for payment in payments[:10] %}
+                                <tr>
+                                    <td><code>{{ payment.receipt_number }}</code></td>
+                                    <td><strong>KSh {{ payment.amount|round(2) }}</strong></td>
+                                    <td>{{ payment.payment_method or 'Cash' }}</td>
+                                    <td>{{ payment.payment_date.strftime('%d/%m/%y') }}</td>
+                                    <td>
+                                        <span class="badge bg-{{ 'success' if payment.status == 'Paid' else 'warning' if payment.status == 'Pending' else 'danger' }}">
+                                            {{ payment.status }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-center text-muted">No payment records</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

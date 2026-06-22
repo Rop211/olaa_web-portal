@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Student{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold"><i class="fas fa-user-plus text-success me-2"></i>Add New Student</h2>
+        <a href="{{ url_for('admin_students') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Back
+        </a>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <form method="POST">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">First Name <span class="text-danger">*</span></label>
+                                <input type="text" name="first_name" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Last Name <span class="text-danger">*</span></label>
+                                <input type="text" name="last_name" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Date of Birth <span class="text-danger">*</span></label>
+                                <input type="date" name="date_of_birth" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Gender</label>
+                                <select name="gender" class="form-select">
+                                    <option value="">Select</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Grade <span class="text-danger">*</span></label>
+                                <input type="text" name="grade" class="form-control" placeholder="e.g. Grade 1" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Enrolled Date</label>
+                                <input type="date" name="enrolled_date" class="form-control">
+                            </div>
+                            <div class="col-12">
+                                <hr>
+                                <h6 class="fw-bold">Guardian Information</h6>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Guardian Name <span class="text-danger">*</span></label>
+                                <input type="text" name="guardian_name" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Guardian Phone <span class="text-danger">*</span></label>
+                                <input type="text" name="guardian_phone" class="form-control" placeholder="+254 7XX XXX XXX" required>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold">Guardian Email</label>
+                                <input type="email" name="guardian_email" class="form-control" placeholder="guardian@email.com">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-bold">Address</label>
+                                <textarea name="address" class="form-control" rows="2" placeholder="Home address"></textarea>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-bold">Medical Notes</label>
+                                <textarea name="medical_notes" class="form-control" rows="2" placeholder="Any medical conditions or allergies"></textarea>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-success btn-lg w-100 py-3">
+                                    <i class="fas fa-save me-2"></i>Create Student
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
